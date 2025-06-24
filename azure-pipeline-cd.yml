@@ -4,7 +4,7 @@ pr: none
 resources:
   pipelines:
     - pipeline: buildPipeline
-      source: Merge Feature Branch to Main  # Must match CI pipeline name
+      source: Merge Feature Branch to Main  # Replace with SHIVAM-DCE.Resume_ATS_Tracker if needed
       trigger:
         branches:
           include:
@@ -15,13 +15,12 @@ variables:
   appServiceName: 'ats-resume-tracker'
   azureSubscription: 'Resume-ATS-Tracker-sc'
   artifactName: 'ats-resume-tracker'
-  system.debug: true  # Enable debug logs
+  system.debug: true
 
 pool:
   vmImage: 'ubuntu-latest'
 
 steps:
-  # Debug: Log pipeline and repository details
   - script: |
       echo "Pipeline ID: $(resources.pipeline.buildPipeline.pipelineID)"
       echo "Run ID: $(resources.pipeline.buildPipeline.runID)"
@@ -29,7 +28,6 @@ steps:
       echo "Source Branch: $(Build.SourceBranch)"
     displayName: 'Debug: Log pipeline details'
 
-  # Download build artifact from CI pipeline
   - task: DownloadPipelineArtifact@2
     displayName: 'Download build artifact'
     inputs:
@@ -41,13 +39,11 @@ steps:
       path: '$(Build.ArtifactStagingDirectory)'
     continueOnError: true
 
-  # Debug: List downloaded artifacts
   - script: |
       echo "Listing downloaded artifacts..."
       ls -la $(Build.ArtifactStagingDirectory)
     displayName: 'Debug: List artifacts'
 
-  # Deploy to Azure Web App
   - task: AzureWebApp@1
     displayName: 'Deploy to Azure Web App'
     inputs:
