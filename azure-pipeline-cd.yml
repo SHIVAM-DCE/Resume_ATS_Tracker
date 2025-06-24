@@ -1,10 +1,11 @@
+```yaml
 trigger: none
 pr: none
 
 resources:
   pipelines:
     - pipeline: buildPipeline
-      source: Merge Feature Branch to Main  # Matches CI pipeline name
+      source: Merge Feature Branch to Main  # Must match CI pipeline name exactly
       trigger:
         branches:
           include:
@@ -14,7 +15,7 @@ variables:
   resourceGroup: 'ats-resume-scanner-rg'
   appServiceName: 'ats-resume-tracker'
   azureSubscription: 'Resume-ATS-Tracker-sc'
-  artifactName: 'ats-resume-tracker'  # Consistent artifact name
+  artifactName: 'ats-resume-tracker'  # Matches CI pipeline artifact
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -26,10 +27,11 @@ steps:
     inputs:
       buildType: 'specific'
       project: '$(System.TeamProject)'
-      pipeline: '$(resources.pipeline.buildPipeline.pipelineID)'  # Use pipelineID for stability
-      runId: '$(resources.pipeline.buildPipeline.runID)'  # Dynamic run ID
+      pipeline: '$(resources.pipeline.buildPipeline.pipelineID)'
+      runId: '$(resources.pipeline.buildPipeline.runID)'
       artifact: '$(artifactName)'
       path: '$(Build.ArtifactStagingDirectory)'
+    continueOnError: true  # Allow debugging if artifact download fails
 
   # Debug: List downloaded artifacts
   - script: |
@@ -46,3 +48,4 @@ steps:
       appName: '$(appServiceName)'
       package: '$(Build.ArtifactStagingDirectory)/$(artifactName).zip'
       resourceGroupName: '$(resourceGroup)'
+```
