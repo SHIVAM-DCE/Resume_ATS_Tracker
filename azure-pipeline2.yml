@@ -3,53 +3,41 @@ pr: none
 
 resources:
   pipelines:
-    - pipeline: buildPipeline
-      source: SHIVAM-DCE.Resume_ATS_Tracker  # Use the actual name of your CI pipeline
+    - pipeline: cd                    # ✅ alias for the source pipeline
+      source: Resume_ATS_Tracker      # ✅ this must match the pipeline name in Azure DevOps, NOT the repo
       trigger:
         branches:
           include:
             - main
 
 variables:
-  resourceGroup: 'ats-resume-scanner-rg'
-  slotName: '' # No slot, deploying to production
-  appServiceName: 'ats-resume-tracker'
-  azureSubscription: 'Resume-ATS-Tracker-sc'
+  resourceGroup: 'ats-resume-scanner-rg'   # ✅ your correct resource group
+  slotName: 'staging'                      # ✅ the slot you want to deploy to
+  appServiceName: 'ats-resume-tracker'     # ✅ your actual App Service name (fixed!)
+  azureSubscription: 'Resume-ATS-Tracker-sc'  # ✅ your Azure service connection name
 
 pool:
   vmImage: 'ubuntu-latest'
 
 steps:
+  # ✅ Download the build artifact from your build pipeline
   - task: DownloadPipelineArtifact@2
     inputs:
-      buildType: 'latest'
+      buildType: 'specific'
       project: '$(System.TeamProject)'
-      pipeline: '$(resources.pipeline.buildPipeline.pipelineId)'
+      pipeline: '$(resources.pipeline.cd.pipelineId)'   # ✅ uses the correct alias 'cd'
+      runVersion: 'latest'
       artifact: 'ats-resume-tracker'
       path: '$(Build.ArtifactStagingDirectory)'
-    displayName: 'Download build artifact from CI pipeline'
 
-  - task: AzureCLI@2
-    displayName: 'Check if slot exists'
-    inputs:
-      azureSubscription: '$(azureSubscription)'
-      scriptType: 'ps'
-      scriptLocation: 'inlineScript'
-      inlineScript: |
-        $slot = az webapp deployment slot list --resource-group "$(resourceGroup)" --name "$(appServiceName)" | ConvertFrom-Json | Where-Object { $_.name -eq "$(slotName)" }
-        if ($slot) {
-          Write-Host "##vso[task.setvariable variable=deployToSlot]true"
-        } else {
-          Write-Host "##vso[task.setvariable variable=deployToSlot]false"
-        }
-
+  # ✅ Deploy to the specified App Service slot
   - task: AzureWebApp@1
-    displayName: 'Deploy to Azure Web App'
+    displayName: 'Deploy to Azure Web App Slot'
     inputs:
       azureSubscription: '$(azureSubscription)'
       appType: 'webApp'
-      appName: '$(appServiceName)'
+      appName: '$(appServiceName)'                   # ✅ correct app name
       package: '$(Build.ArtifactStagingDirectory)/ats-resume-tracker.zip'
       resourceGroupName: '$(resourceGroup)'
-      deployToSlotOrASE: '$(deployToSlot)'
-      slotName: '$(slotName)'
+      deployToSlotOrASE: true                        # ✅ enable slot deploy
+      slotName: '$(slotName)'                        # ✅ slot name to deploy to
