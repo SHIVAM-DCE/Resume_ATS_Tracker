@@ -12,7 +12,7 @@ resources:
 
 variables:
   resourceGroup: 'ats-resume-scanner-rg'
-  slotName: 'staging'
+  slotName: '' # No slot, deploying to production
   appServiceName: 'ats-resume-tracker'
   azureSubscription: 'Resume-ATS-Tracker-sc'
 
@@ -29,6 +29,20 @@ steps:
       path: '$(Build.ArtifactStagingDirectory)'
     displayName: 'Download build artifact from CI pipeline'
 
+  - task: AzureCLI@2
+    displayName: 'Check if slot exists'
+    inputs:
+      azureSubscription: '$(azureSubscription)'
+      scriptType: 'ps'
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        $slot = az webapp deployment slot list --resource-group "$(resourceGroup)" --name "$(appServiceName)" | ConvertFrom-Json | Where-Object { $_.name -eq "$(slotName)" }
+        if ($slot) {
+          Write-Host "##vso[task.setvariable variable=deployToSlot]true"
+        } else {
+          Write-Host "##vso[task.setvariable variable=deployToSlot]false"
+        }
+
   - task: AzureWebApp@1
     displayName: 'Deploy to Azure Web App'
     inputs:
@@ -37,5 +51,5 @@ steps:
       appName: '$(appServiceName)'
       package: '$(Build.ArtifactStagingDirectory)/ats-resume-tracker.zip'
       resourceGroupName: '$(resourceGroup)'
-     # deployToSlotOrASE: true
-     # slotName: '$(slotName)'
+      deployToSlotOrASE: '$(deployToSlot)'
+      slotName: '$(slotName)'
