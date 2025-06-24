@@ -13,7 +13,7 @@ resources:
 variables:
   resourceGroup: 'ats-resume-scanner-rg'
   slotName: 'staging'
-  appServiceName: 'ats-resume-scanner'
+  appServiceName: 'ats-resume-tracker'
   azureSubscription: 'Resume-ATS-Tracker-sc'
 
 pool:
