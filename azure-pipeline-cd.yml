@@ -20,9 +20,7 @@ steps:
   - task: DownloadPipelineArtifact@2
     displayName: 'Download build artifact from CI pipeline'
     inputs:
-      buildType: 'specific'
-      project: '$(System.TeamProject)'
-      pipeline: '$(resources.pipeline.buildPipeline.runID)'
+      buildType: 'latest'
       artifact: 'ats-resume-tracker'
       path: '$(Build.ArtifactStagingDirectory)'
 

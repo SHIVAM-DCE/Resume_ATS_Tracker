@@ -52,24 +52,6 @@ steps:
       git push origin main
     displayName: 'Merge to main'
 
-  # ✅ Archive the repository as a build artifact
-  - task: ArchiveFiles@2
-    inputs:
-      rootFolderOrFile: '$(Build.SourcesDirectory)'
-      includeRootFolder: false
-      archiveType: 'zip'
-      archiveFile: '$(Build.ArtifactStagingDirectory)/ats-resume-tracker.zip'
-      replaceExistingArchive: true
-    displayName: 'Archive source as artifact'
-
-  # ✅ Publish the build artifact
-  - task: PublishBuildArtifacts@1
-    inputs:
-      PathtoPublish: '$(Build.ArtifactStagingDirectory)/ats-resume-tracker.zip'
-      ArtifactName: 'ats-resume-tracker'
-      publishLocation: 'Container'
-    displayName: 'Publish build artifact'
-
   # ✅ Delete the feature branch on remote, if it still exists
   - script: |
       echo "Checking if branch $(FEATURE_BRANCH) exists on remote before deleting..."
@@ -82,6 +64,24 @@ steps:
         echo "Branch not found on remote — skipping delete."
       fi
     displayName: 'Delete feature branch'
+
+  # ✅ Archive the repository as a build artifact (on main branch only)
+  - script: |
+      if [ "$(Build.SourceBranchName)" = "main" ]; then
+        echo "Archiving and publishing artifact on main branch..."
+        zip -r $(Build.ArtifactStagingDirectory)/ats-resume-tracker.zip .
+      else
+        echo "Not on main branch, skipping artifact archive."
+      fi
+    displayName: 'Archive source as artifact (main only)'
+
+  - task: PublishBuildArtifacts@1
+    condition: eq(variables['Build.SourceBranchName'], 'main')
+    inputs:
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)/ats-resume-tracker.zip'
+      ArtifactName: 'ats-resume-tracker'
+      publishLocation: 'Container'
+    displayName: 'Publish build artifact (main only)'
 
 
 
