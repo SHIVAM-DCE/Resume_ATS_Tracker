@@ -3,7 +3,7 @@ pr: none
 
 resources:
   pipelines:
-    - pipeline: cd
+    - pipeline: buildPipeline
       source: Resume_ATS_Tracker
       trigger:
         branches:
@@ -22,7 +22,7 @@ steps:
     inputs:
       buildType: 'latest'
       project: '$(System.TeamProject)'
-      pipeline: '$(resources.pipeline.cd.pipelineId)'
+      pipeline: '$(resources.pipeline.buildPipeline.pipelineId)'
       artifact: 'ats-resume-tracker'
       path: '$(Build.ArtifactStagingDirectory)'
 
