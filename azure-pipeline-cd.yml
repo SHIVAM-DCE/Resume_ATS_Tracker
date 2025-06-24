@@ -17,14 +17,15 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
-  - task: DownloadPipelineArtifact@2
-    displayName: 'Download build artifact from CI pipeline'
+  - task: UniversalPackages@0
+    displayName: 'Download Universal Package from Azure Artifacts feed'
     inputs:
-      buildType: 'specific'
-      project: '$(System.TeamProject)'
-      pipeline: '$(resources.pipeline.buildPipeline.runID)'
-      artifact: 'ats-resume-tracker'
-      path: '$(Build.ArtifactStagingDirectory)'
+      command: 'download'
+      downloadDirectory: '$(Build.ArtifactStagingDirectory)'
+      feedsToUse: 'select'
+      vstsFeed: 'ats-resume-tracker'
+      vstsFeedPackage: 'ats-resume-tracker'
+      vstsPackageVersion: '1.0.*'
 
   - task: AzureWebApp@1
     displayName: 'Deploy to Azure Web App'

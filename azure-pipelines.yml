@@ -76,6 +76,23 @@ steps:
       fi
     displayName: 'Archive source as artifact (main only)'
 
+  # ✅ Publish the build artifact to Azure Artifacts Universal Package feed
+  - task: AzureCLI@2
+    condition: eq(variables['Build.SourceBranchName'], 'main')
+    displayName: 'Publish Universal Package to Azure Artifacts feed'
+    inputs:
+      azureSubscription: '$(azureSubscription)'
+      scriptType: 'bash'
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        az artifacts universal publish \
+          --organization https://dev.azure.com/shivam-dce \
+          --feed ats-resume-tracker \
+          --name ats-resume-tracker \
+          --version 1.0.$(Build.BuildId) \
+          --description "ATS Resume Tracker build artifact" \
+          --path $(Build.ArtifactStagingDirectory)/ats-resume-tracker.zip
+
   - task: PublishBuildArtifacts@1
     condition: eq(variables['Build.SourceBranchName'], 'main')
     inputs:
