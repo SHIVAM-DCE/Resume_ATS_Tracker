@@ -17,7 +17,7 @@ variables:
   # app name is here
   appServiceName: 'ats-resume-scanner'
   # service connection name is here
-  azureSubscription: 'ats-resume-tracker'
+  azureSubscription: 'Resume-ATS-Tracker-sc'
 
 pool:
   vmImage: 'ubuntu-latest'
