@@ -15,9 +15,9 @@ variables:
   resourceGroup: 'ats-resume-scanner-rg'
   slotName: 'staging'  # or your slot name
   # app name is here
-  appServiceName: 'your-app-service-name'
+  appServiceName: 'ats-resume-scanner'
   # service connection name is here
-  azureSubscription: 'your-azure-service-connection-name'
+  azureSubscription: 'ats-resume-tracker'
 
 pool:
   vmImage: 'ubuntu-latest'
