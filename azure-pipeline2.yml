@@ -37,5 +37,5 @@ steps:
       appName: '$(appServiceName)'
       package: '$(Build.ArtifactStagingDirectory)/ats-resume-tracker.zip'
       resourceGroupName: '$(resourceGroup)'
-      deployToSlotOrASE: true
-      slotName: '$(slotName)'
+     # deployToSlotOrASE: true
+     # slotName: '$(slotName)'
