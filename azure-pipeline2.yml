@@ -1,11 +1,10 @@
-# azure-pipeline2.yml
 trigger: none
 pr: none
 
 resources:
   pipelines:
-    - pipeline: cd
-      source: SHIVAM-DCE.Resume_ATS_Tracker
+    - pipeline: cd                    # ✅ your alias for this pipeline resource
+      source: SHIVAM-DCE.Resume_ATS_Tracker  # ✅ the pipeline name in Azure DevOps
       trigger:
         branches:
           include:
@@ -13,10 +12,8 @@ resources:
 
 variables:
   resourceGroup: 'ats-resume-scanner-rg'
-  slotName: 'staging'  # or your slot name
-  # app name is here
+  slotName: 'staging'
   appServiceName: 'ats-resume-scanner'
-  # service connection name is here
   azureSubscription: 'Resume-ATS-Tracker-sc'
 
 pool:
@@ -27,7 +24,7 @@ steps:
     inputs:
       buildType: 'specific'
       project: '$(System.TeamProject)'
-      pipeline: '$(resources.pipeline.buildPipeline.pipelineId)'
+      pipeline: '$(resources.pipeline.cd.pipelineId)'  # ✅ match alias: cd
       runVersion: 'latest'
       artifact: 'ats-resume-tracker'
       path: '$(Build.ArtifactStagingDirectory)'
