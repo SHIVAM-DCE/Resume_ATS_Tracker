@@ -1,7 +1,3 @@
-# ===============================
-# ✅ CI Pipeline: Builds + Merges + Publishes Artifact
-# ===============================
-
 name: Merge Feature Branch to Main
 
 trigger:
@@ -14,69 +10,76 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  FEATURE_BRANCH: feature/feature1  # Branch to merge
+  featureBranch: 'feature/feature1'  # Define the feature branch to merge
+  artifactName: 'ats-resume-tracker'  # Consistent artifact name
 
 steps:
-  # ✅ Checkout with push permission
+  # Checkout repo with push permission
   - checkout: self
     persistCredentials: true
 
-  # ✅ Setup Node.js
+  # Set up Node.js
   - task: NodeTool@0
     inputs:
       versionSpec: '20'
     displayName: 'Set up Node.js'
 
-  # ✅ Install dependencies
+  # Install dependencies
   - script: npm install
     displayName: 'Install dependencies'
 
-  # ✅ Run tests (placeholder)
-  - script: echo "No tests defined — skipping test step."
+  # Run placeholder tests (replace with actual tests later)
+  - script: echo "Running tests..." && npm test || echo "No tests defined, skipping."
     displayName: 'Run tests'
 
-  # ✅ Configure Git identity
+  # Configure Git identity
   - script: |
       git config user.name "SHIVAM-DCE"
       git config user.email "shivamkumarkaimur@gmail.com"
     displayName: 'Configure Git'
 
-  # ✅ Merge feature branch to main
+  # Merge feature branch to main
   - script: |
-      echo "Merging $(FEATURE_BRANCH) into main..."
+      echo "Merging $(featureBranch) into main..."
       git fetch origin main
       git checkout main
       git pull origin main
-      git merge --no-ff origin/$(FEATURE_BRANCH) -m "Auto merge $(FEATURE_BRANCH) into main"
+      git merge --no-ff origin/$(featureBranch) -m "Auto merge $(featureBranch) into main"
       git push origin main
-    displayName: 'Merge feature branch to main'
+    displayName: 'Merge to main'
+    condition: and(succeeded(), ne(variables['Build.SourceBranchName'], 'main'))
 
-  # ✅ Delete feature branch if it exists
+  # Delete the feature branch on remote, if it exists
   - script: |
-      echo "Checking if branch $(FEATURE_BRANCH) exists on remote..."
-      if git ls-remote --exit-code --heads origin $(FEATURE_BRANCH); then
+      echo "Checking if branch $(featureBranch) exists on remote..."
+      if git ls-remote --exit-code --heads origin $(featureBranch); then
         echo "Branch exists — deleting..."
-        git push origin --delete refs/heads/$(FEATURE_BRANCH)
+        git push origin --delete refs/heads/$(featureBranch)
       else
-        echo "Branch not found — skipping delete."
+        echo "Branch not found on remote — skipping delete."
       fi
-    displayName: 'Delete feature branch on remote'
+    displayName: 'Delete feature branch'
+    condition: and(succeeded(), ne(variables['Build.SourceBranchName'], 'main'))
 
-  # ✅ Archive repo as artifact (ONLY on main)
+  # Archive the repository as a build artifact (on main branch only)
   - script: |
-      if [ "$(Build.SourceBranchName)" = "main" ]; then
-        echo "Archiving source..."
-        zip -r $(Build.ArtifactStagingDirectory)/ats-resume-tracker.zip .
-      else
-        echo "Not on main branch — skipping archive."
-      fi
-    displayName: 'Archive source (main only)'
+      echo "Archiving source as artifact on main branch..."
+      zip -r $(Build.ArtifactStagingDirectory)/$(artifactName).zip .
+    displayName: 'Archive source as artifact'
+    condition: eq(variables['Build.SourceBranchName'], 'main')
 
-  # ✅ Publish build artifact (ONLY on main)
+  # Verify artifact creation
+  - script: |
+      echo "Verifying artifact..."
+      ls -la $(Build.ArtifactStagingDirectory)/$(artifactName).zip
+    displayName: 'Verify artifact'
+    condition: eq(variables['Build.SourceBranchName'], 'main')
+
+  # Publish build artifact (on main branch only)
   - task: PublishBuildArtifacts@1
+    displayName: 'Publish build artifact'
     condition: eq(variables['Build.SourceBranchName'], 'main')
     inputs:
-      PathtoPublish: '$(Build.ArtifactStagingDirectory)/ats-resume-tracker.zip'
-      ArtifactName: 'ats-resume-tracker'
+      pathToPublish: '$(Build.ArtifactStagingDirectory)/$(artifactName).zip'
+      artifactName: '$(artifactName)'
       publishLocation: 'Container'
-    displayName: 'Publish build artifact (main only)'
