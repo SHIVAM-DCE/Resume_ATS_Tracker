@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ATS Resume Tracker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <div class="container">
+    <button class="help-btn" id="help-btn">Help</button>
+    <h1>ATS Resume Tracker</h1>
+    <p class="subtitle">Analyze your resume against job descriptions with a professional ATS tool.</p>
+    <div class="grid">
+      <div class="card">
+        <h2>Job Description</h2>
+        <textarea id="job-description" placeholder="Enter job description (max 5000 words)..." rows="5"></textarea>
+      </div>
+      <div class="card" id="job-keywords">
+        <h3>Extracted Keywords</h3>
+        <div id="job-keywords-content"></div>
+      </div>
+      <div class="card">
+        <h2>Upload Resume</h2>
+        <input type="file" id="resume-file" accept=".pdf">
+        <p class="file-note">Max file size: 5MB (text-based PDF only)</p>
+      </div>
+      <div class="card" id="resume-keywords">
+        <h3>Extracted Keywords</h3>
+        <div id="resume-keywords-content"></div>
+      </div>
+    </div>
+    <button type="button" id="analyze-btn">Analyze Resume 🚀</button>
+    <div id="error" class="error"></div>
+    <div id="spinner" class="spinner"></div>
+    <div id="results" class="card mt-8" style="display: none;">
+      <h2>Analysis Results</h2>
+      <div id="match-score"></div>
+      <div id="missing-keywords" class="mt-4"></div>
+      <div id="ai-analysis" class="mt-4"></div>
+      <div id="skills-requirements" class="mt-4">
+        <h3>Extracted Requirements</h3>
+        <div class="skills-grid" id="requirements-grid"></div>
+      </div>
+    </div>
+    <div class="overlay" id="overlay"></div>
+    <div class="help-section" id="help-section">
+      <button class="close-btn" id="close-help">×</button>
+      <h2>Help & Instructions</h2>
+      <p>Follow these steps to use the ATS Resume Tracker effectively:</p>
+      <ul>
+        <li><strong>Enter Job Description:</strong> Paste or type the job description in the left textarea (up to 5000 words).</li>
+        <li><strong>Upload Resume:</strong> Select a text-based PDF resume (max 5MB) using the file input on the right.</li>
+        <li><strong>Analyze:</strong> Click the "Analyze Resume" button to process your inputs.</li>
+        <li><strong>View Results:</strong> Check the results section for:
+          <ul>
+            <li>Match score (percentage of keyword overlap).</li>
+            <li>Extracted keywords from job description (below job description box).</li>
+            <li>Extracted keywords from resume (below resume upload box).</li>
+            <li>Missing keywords from the job description.</li>
+            <li>AI-powered analysis with suggestions.</li>
+            <li>Extracted requirements (Technical Skills, Soft Skills, Tools).</li>
+          </ul>
+        </li>
+        <li><strong>Tips:</strong> Ensure your resume is text-based (not scanned) and the job description is clear and detailed.</li>
+      </ul>
+    </div>
+    <div class="footer">Built with HTML, CSS, JS & Node.js | © 2025 ATS Resume Tracker</div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.7.2/dist/axios.min.js"></script>
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

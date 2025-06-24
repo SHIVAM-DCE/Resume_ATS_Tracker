@@ -1,0 +1,1114 @@
+{
+  "Software Engineer": {
+    "Technical Skills": [
+      "Python",
+      "Java",
+      "C++",
+      "JavaScript",
+      "TypeScript",
+      "SQL",
+      "REST APIs",
+      "GraphQL",
+      "Unit testing",
+      "Data structures",
+      "Algorithms",
+      "Agile methodologies",
+      "Scrum",
+      "TDD",
+      "Object-oriented programming",
+      "Functional programming",
+      "Version control",
+      "Debugging"
+    ],
+    "Soft Skills": [
+      "Problem-solving",
+      "Collaboration",
+      "Communication",
+      "Adaptability",
+      "Critical thinking",
+      "Time management"
+    ],
+    "Tools": [
+      "Git",
+      "Jira",
+      "VS Code",
+      "IntelliJ IDEA",
+      "Postman",
+      "Docker",
+      "Jenkins"
+    ]
+  },
+  "Senior Software Engineer": {
+    "Technical Skills": [
+      "Advanced Python",
+      "Java",
+      "C#",
+      "System design",
+      "Code review",
+      "Mentorship",
+      "Architectural patterns",
+      "Microservices",
+      "Debugging",
+      "Agile",
+      "SQL",
+      "REST APIs",
+      "Design patterns",
+      "Performance optimization",
+      "Cloud integration",
+      "Unit testing",
+      "CI/CD"
+    ],
+    "Soft Skills": [
+      "Leadership",
+      "Communication",
+      "Teamwork",
+      "Mentoring",
+      "Decision-making",
+      "Problem-solving"
+    ],
+    "Tools": [
+      "Git",
+      "Jira",
+      "IntelliJ IDEA",
+      "VS Code",
+      "Docker",
+      "Kubernetes",
+      "Confluence"
+    ]
+  },
+  "Software Architect": {
+    "Technical Skills": [
+      "System architecture",
+      "Design patterns",
+      "Scalability",
+      "Microservices",
+      "AWS",
+      "Azure",
+      "Technical leadership",
+      "UML",
+      "REST APIs",
+      "DevOps principles",
+      "TOGAF",
+      "SOA",
+      "Cloud-native development",
+      "API design",
+      "Enterprise integration",
+      "Performance tuning"
+    ],
+    "Soft Skills": [
+      "Stakeholder management",
+      "Strategic thinking",
+      "Collaboration",
+      "Leadership",
+      "Communication",
+      "Decision-making"
+    ],
+    "Tools": [
+      "Enterprise Architect",
+      "Lucidchart",
+      "Visio",
+      "AWS Well-Architected Tool",
+      "Confluence",
+      "Jira"
+    ]
+  },
+  "Data Scientist": {
+    "Technical Skills": [
+      "Python",
+      "R",
+      "SQL",
+      "Machine learning",
+      "TensorFlow",
+      "PyTorch",
+      "Scikit-learn",
+      "Hadoop",
+      "Spark",
+      "Statistical modeling",
+      "Data visualization",
+      "Deep learning",
+      "NLP",
+      "Feature engineering",
+      "A/B testing",
+      "Time series analysis",
+      "Big data analytics"
+    ],
+    "Soft Skills": [
+      "Problem-solving",
+      "Analytical thinking",
+      "Communication",
+      "Collaboration",
+      "Critical thinking",
+      "Attention to detail"
+    ],
+    "Tools": [
+      "Tableau",
+      "Power BI",
+      "Jupyter Notebook",
+      "Pandas",
+      "NumPy",
+      "Matplotlib",
+      "Apache Airflow"
+    ]
+  },
+  "Data Analyst": {
+    "Technical Skills": [
+      "SQL",
+      "Python",
+      "R",
+      "Statistical analysis",
+      "Data visualization",
+      "Business intelligence",
+      "Reporting",
+      "Data cleaning",
+      "ETL processes",
+      "Excel",
+      "Data modeling",
+      "Dashboard creation",
+      "Predictive analytics"
+    ],
+    "Soft Skills": [
+      "Attention to detail",
+      "Communication",
+      "Collaboration",
+      "Analytical thinking",
+      "Problem-solving",
+      "Time management"
+    ],
+    "Tools": [
+      "Excel",
+      "Tableau",
+      "Power BI",
+      "Google Data Studio",
+      "Jira",
+      "SQL Server Management Studio",
+      "Looker"
+    ]
+  },
+  "Machine Learning Engineer": {
+    "Technical Skills": [
+      "Python",
+      "TensorFlow",
+      "PyTorch",
+      "Scikit-learn",
+      "Model deployment",
+      "Data preprocessing",
+      "SQL",
+      "AWS",
+      "Docker",
+      "Deep learning",
+      "NLP",
+      "MLOps",
+      "Feature engineering",
+      "Model evaluation",
+      "Hyperparameter tuning",
+      "Cloud integration"
+    ],
+    "Soft Skills": [
+      "Collaboration",
+      "Analytical thinking",
+      "Problem-solving",
+      "Communication",
+      "Adaptability"
+    ],
+    "Tools": [
+      "Jupyter Notebook",
+      "Git",
+      "AWS SageMaker",
+      "MLflow",
+      "Kubernetes",
+      "Pandas"
+    ]
+  },
+  "DevOps Engineer": {
+    "Technical Skills": [
+      "Docker",
+      "Kubernetes",
+      "AWS",
+      "Azure",
+      "CI/CD",
+      "Bash",
+      "Python",
+      "Ansible",
+      "Infrastructure as Code",
+      "Cloud security",
+      "Monitoring",
+      "Container orchestration",
+      "Scripting",
+      "GitOps",
+      "Networking"
+    ],
+    "Soft Skills": [
+      "Problem-solving",
+      "Collaboration",
+      "Communication",
+      "Time management",
+      "Adaptability"
+    ],
+    "Tools": [
+      "Jenkins",
+      "Terraform",
+      "Prometheus",
+      "GitLab",
+      "Grafana",
+      "AWS CLI",
+      "Ansible Tower"
+    ]
+  },
+  "Site Reliability Engineer (SRE)": {
+    "Technical Skills": [
+      "Linux administration",
+      "AWS",
+      "GCP",
+      "Kubernetes",
+      "Incident response",
+      "Automation",
+      "Python",
+      "System reliability",
+      "On-call experience",
+      "Monitoring",
+      "Capacity planning",
+      "SLO/SLI",
+      "Chaos engineering",
+      "Infrastructure as Code"
+    ],
+    "Soft Skills": [
+      "Collaboration",
+      "Problem-solving",
+      "Communication",
+      "Stress management",
+      "Decision-making"
+    ],
+    "Tools": [
+      "Prometheus",
+      "Grafana",
+      "PagerDuty",
+      "Terraform",
+      "Datadog",
+      "AWS CloudWatch"
+    ]
+  },
+  "Systems Administrator": {
+    "Technical Skills": [
+      "Linux",
+      "Windows Server",
+      "Networking",
+      "VMware",
+      "Active Directory",
+      "Bash",
+      "PowerShell",
+      "Backup systems",
+      "System monitoring",
+      "Virtualization",
+      "Patch management",
+      "Server configuration",
+      "DNS"
+    ],
+    "Soft Skills": [
+      "Customer service",
+      "Communication",
+      "Time management",
+      "Problem-solving",
+      "Attention to detail",
+      "Troubleshooting"
+    ],
+    "Tools": [
+      "Nagios",
+      "ServiceNow",
+      "Zabbix",
+      "Microsoft SCCM",
+      "VMware vSphere"
+    ]
+  },
+  "Network Engineer": {
+    "Technical Skills": [
+      "TCP/IP",
+      "Routing",
+      "Switching",
+      "Firewalls",
+      "VPN",
+      "Cisco",
+      "Juniper",
+      "CCNA",
+      "CCNP",
+      "BGP",
+      "OSPF",
+      "SD-WAN",
+      "Network security",
+      "Load balancing"
+    ],
+    "Soft Skills": [
+      "Analytical skills",
+      "Problem-solving",
+      "Collaboration",
+      "Communication",
+      "Attention to detail",
+      "Troubleshooting"
+    ],
+    "Tools": [
+      "Wireshark",
+      "SolarWinds",
+      "Cisco Packet Tracer",
+      "NetFlow",
+      "PRTG"
+    ]
+  },
+  "Database Administrator": {
+    "Technical Skills": [
+      "SQL",
+      "NoSQL",
+      "MySQL",
+      "PostgreSQL",
+      "Oracle",
+      "MongoDB",
+      "Database optimization",
+      "Backup",
+      "Recovery",
+      "Data modeling",
+      "Performance tuning",
+      "Indexing",
+      "Replication",
+      "High availability",
+      "ETL"
+    ],
+    "Soft Skills": [
+      "Attention to detail",
+      "Problem-solving",
+      "Communication",
+      "Time management",
+      "Collaboration"
+    ],
+    "Tools": [
+      "SQL Server Management Studio",
+      "pgAdmin",
+      "Oracle Enterprise Manager",
+      "MongoDB Compass",
+      "Toad"
+    ]
+  },
+  "Cybersecurity Analyst": {
+    "Technical Skills": [
+      "SIEM",
+      "Penetration testing",
+      "Firewalls",
+      "Incident response",
+      "Vulnerability scanning",
+      "Security protocols",
+      "CISSP",
+      "Ethical hacking",
+      "Risk assessment",
+      "Intrusion detection",
+      "Malware analysis",
+      "Network security",
+      "Log analysis"
+    ],
+    "Soft Skills": [
+      "Analytical thinking",
+      "Communication",
+      "Attention to detail",
+      "Problem-solving",
+      "Collaboration"
+    ],
+    "Tools": [
+      "Splunk",
+      "Wireshark",
+      "Kali Linux",
+      "Metasploit",
+      "Nessus",
+      "Burp Suite"
+    ]
+  },
+  "Information Security Specialist": {
+    "Technical Skills": [
+      "Risk assessment",
+      "Encryption",
+      "GDPR",
+      "ISO 27001",
+      "IAM",
+      "Vulnerability management",
+      "Security audits",
+      "Penetration testing",
+      "CEH",
+      "CISM",
+      "Compliance",
+      "Threat modeling",
+      "Security architecture",
+      "Cryptography"
+    ],
+    "Soft Skills": [
+      "Communication",
+      "Collaboration",
+      "Analytical thinking",
+      "Attention to detail",
+      "Decision-making"
+    ],
+    "Tools": [
+      "Nessus",
+      "Splunk",
+      "Qualys",
+      "OpenVAS",
+      "Microsoft Defender"
+    ]
+  },
+  "Cloud Engineer": {
+    "Technical Skills": [
+      "AWS",
+      "Azure",
+      "GCP",
+      "Docker",
+      "Kubernetes",
+      "Cloud security",
+      "Networking",
+      "CI/CD",
+      "Scripting",
+      "Cost optimization",
+      "Infrastructure as Code",
+      "Serverless computing",
+      "Load balancing",
+      "Cloud monitoring"
+    ],
+    "Soft Skills": [
+      "Problem-solving",
+      "Collaboration",
+      "Communication",
+      "Adaptability",
+      "Time management"
+    ],
+    "Tools": [
+      "Terraform",
+      "AWS CLI",
+      "Ansible",
+      "CloudFormation",
+      "Azure DevOps"
+    ]
+  },
+  "Cloud Architect": {
+    "Technical Skills": [
+      "AWS",
+      "Azure",
+      "GCP",
+      "Cloud strategy",
+      "Hybrid cloud",
+      "Multi-cloud",
+      "Disaster recovery",
+      "Cloud migration",
+      "Cost optimization",
+      "TOGAF",
+      "Serverless architecture",
+      "Cloud security",
+      "Microservices",
+      "Enterprise integration"
+    ],
+    "Soft Skills": [
+      "Leadership",
+      "Stakeholder management",
+      "Strategic thinking",
+      "Communication",
+      "Collaboration"
+    ],
+    "Tools": [
+      "Terraform",
+      "AWS Well-Architected Tool",
+      "Lucidchart",
+      "Azure Architecture Center",
+      "Draw.io"
+    ]
+  },
+  "Front-End Developer": {
+    "Technical Skills": [
+      "HTML5",
+      "CSS3",
+      "JavaScript",
+      "React",
+      "Angular",
+      "Vue.js",
+      "Responsive design",
+      "TypeScript",
+      "Accessibility",
+      "Web performance optimization",
+      "CSS preprocessors",
+      "Progressive Web Apps",
+      "Browser compatibility"
+    ],
+    "Soft Skills": [
+      "Collaboration",
+      "Attention to detail",
+      "Communication",
+      "Creativity",
+      "Problem-solving"
+    ],
+    "Tools": [
+      "Git",
+      "Webpack",
+      "VS Code",
+      "Figma",
+      "Sublime Text",
+      "ESLint"
+    ]
+  },
+  "Back-End Developer": {
+    "Technical Skills": [
+      "Node.js",
+      "Java",
+      "Python",
+      "REST APIs",
+      "GraphQL",
+      "SQL",
+      "NoSQL",
+      "MongoDB",
+      "PostgreSQL",
+      "Authentication",
+      "Microservices",
+      "Server-side rendering",
+      "Database optimization",
+      "Scalability"
+    ],
+    "Soft Skills": [
+      "Problem-solving",
+      "Collaboration",
+      "Communication",
+      "Analytical thinking",
+      "Time management"
+    ],
+    "Tools": [
+      "Postman",
+      "IntelliJ IDEA",
+      "VS Code",
+      "Docker",
+      "Git"
+    ]
+  },
+  "Full-Stack Developer": {
+    "Technical Skills": [
+      "HTML5",
+      "CSS3",
+      "JavaScript",
+      "React",
+      "Node.js",
+      "Python",
+      "SQL",
+      "REST APIs",
+      "Docker",
+      "CI/CD",
+      "End-to-end development",
+      "TypeScript",
+      "MongoDB",
+      "Microservices",
+      "Cloud integration"
+    ],
+    "Soft Skills": [
+      "Communication",
+      "Problem-solving",
+      "Collaboration",
+      "Adaptability",
+      "Time management"
+    ],
+    "Tools": [
+      "Git",
+      "VS Code",
+      "Postman",
+      "Docker",
+      "Jira",
+      "Webpack"
+    ]
+  },
+  "UI/UX Designer": {
+    "Technical Skills": [
+      "Wireframing",
+      "Prototyping",
+      "User research",
+      "Usability testing",
+      "Visual design",
+      "Interaction design",
+      "Information architecture",
+      "User personas",
+      "A/B testing",
+      "Accessibility design"
+    ],
+    "Soft Skills": [
+      "Collaboration",
+      "Attention to detail",
+      "Communication",
+      "Creativity",
+      "Empathy"
+    ],
+    "Tools": [
+      "Figma",
+      "Sketch",
+      "Adobe XD",
+      "InVision",
+      "Zeplin",
+      "Miro",
+      "Axure"
+    ]
+  },
+  "Product Manager": {
+    "Technical Skills": [
+      "Product lifecycle",
+      "Roadmapping",
+      "Agile",
+      "Scrum",
+      "User stories",
+      "Market research",
+      "Prioritization",
+      "Product analytics",
+      "KPI tracking",
+      "Feature definition",
+      "Go-to-market strategy"
+    ],
+    "Soft Skills": [
+      "Communication",
+      "Leadership",
+      "Collaboration",
+      "Stakeholder management",
+      "Decision-making"
+    ],
+    "Tools": [
+      "Jira",
+      "Confluence",
+      "Trello",
+      "Asana",
+      "Productboard",
+      "Mixpanel"
+    ]
+  },
+  "Project Manager": {
+    "Technical Skills": [
+      "Project planning",
+      "Agile",
+      "Scrum",
+      "Budget management",
+      "PMP",
+      "Kanban",
+      "Resource allocation",
+      "Project scheduling",
+      "Change management"
+    ],
+    "Soft Skills": [
+      "Stakeholder communication",
+      "Time management",
+      "Leadership",
+      "Teamwork",
+      "Conflict resolution",
+      "Risk management"
+    ],
+    "Tools": [
+      "Jira",
+      "MS Project",
+      "Asana",
+      "Smartsheet",
+      "Monday.com",
+      "Confluence"
+    ]
+  },
+  "Scrum Master": {
+    "Technical Skills": [
+      "Scrum framework",
+      "Sprint planning",
+      "Facilitation",
+      "Agile coaching",
+      "CSM",
+      "PSM",
+      "Kanban",
+      "Velocity tracking",
+      "Retrospectives",
+      "Story point estimation"
+    ],
+    "Soft Skills": [
+      "Conflict resolution",
+      "Team building",
+      "Communication",
+      "Collaboration",
+      "Empathy"
+    ],
+    "Tools": [
+      "Jira",
+      "Confluence",
+      "Trello",
+      "Miro",
+      "Slack",
+      "Azure DevOps"
+    ]
+  },
+  "Quality Assurance (QA) Engineer": {
+    "Technical Skills": [
+      "Manual testing",
+      "Test case creation",
+      "Bug tracking",
+      "Test planning",
+      "Regression testing",
+      "Agile",
+      "Basic automation",
+      "SQL",
+      "Functional testing",
+      "Performance testing",
+      "Test strategy"
+    ],
+    "Soft Skills": [
+      "Attention to detail",
+      "Communication",
+      "Collaboration",
+      "Problem-solving",
+      "Analytical thinking"
+    ],
+    "Tools": [
+      "Jira",
+      "TestRail",
+      "Postman",
+      "Bugzilla",
+      "Selenium"
+    ]
+  },
+  "Test Automation Engineer": {
+    "Technical Skills": [
+      "Selenium",
+      "Appium",
+      "Python",
+      "Java",
+      "TestNG",
+      "Cucumber",
+      "CI/CD",
+      "Test automation frameworks",
+      "SQL",
+      "API testing",
+      "Performance testing",
+      "BDD",
+      "TDD"
+    ],
+    "Soft Skills": [
+      "Problem-solving",
+      "Attention to detail",
+      "Collaboration",
+      "Communication",
+      "Time management"
+    ],
+    "Tools": [
+      "Jenkins",
+      "Git",
+      "Jira",
+      "Postman",
+      "SoapUI",
+      "Cypress"
+    ]
+  },
+  "Business Analyst": {
+    "Technical Skills": [
+      "Requirements gathering",
+      "UML",
+      "BPMN",
+      "Process modeling",
+      "SQL",
+      "Data analysis",
+      "Use case development",
+      "Business process improvement",
+      "Stakeholder interviews",
+      "Agile methodologies"
+    ],
+    "Soft Skills": [
+      "Stakeholder communication",
+      "Problem-solving",
+      "Collaboration",
+      "Communication",
+      "Analytical thinking",
+      "Facilitation"
+    ],
+    "Tools": [
+      "Jira",
+      "Visio",
+      "Confluence",
+      "Lucidchart",
+      "Tableau",
+      "MS Office"
+    ]
+  },
+  "IT Support Specialist": {
+    "Technical Skills": [
+      "Hardware troubleshooting",
+      "Software troubleshooting",
+      "Active Directory",
+      "Networking",
+      "Windows",
+      "Linux",
+      "ITIL",
+      "Remote support",
+      "Patch management",
+      "Desktop support"
+    ],
+    "Soft Skills": [
+      "Customer service",
+      "Communication",
+      "Time management",
+      "Problem-solving",
+      "Patience"
+    ],
+    "Tools": [
+      "Ticketing systems",
+      "ServiceNow",
+      "Zendesk",
+      "Microsoft 365",
+      "TeamViewer",
+      "SCCM"
+    ]
+  },
+  "Technical Support Engineer": {
+    "Technical Skills": [
+      "Product troubleshooting",
+      "Log analysis",
+      "SQL",
+      "Debugging",
+      "SLAs",
+      "Networking",
+      "Customer support",
+      "Root cause analysis",
+      "Technical documentation"
+    ],
+    "Soft Skills": [
+      "Communication",
+      "Problem-solving",
+      "Customer focus",
+      "Patience",
+      "Collaboration"
+    ],
+    "Tools": [
+      "Ticketing systems",
+      "ServiceNow",
+      "Wireshark",
+      "Zendesk",
+      "Logstash"
+    ]
+  },
+  "IT Consultant": {
+    "Technical Skills": [
+      "Business process analysis",
+      "Solution design",
+      "Cloud platforms",
+      "ERP",
+      "CRM",
+      "Project implementation",
+      "Technical expertise",
+      "IT strategy",
+      "Change management",
+      "Stakeholder analysis"
+    ],
+    "Soft Skills": [
+      "Communication",
+      "Client management",
+      "Collaboration",
+      "Adaptability",
+      "Leadership"
+    ],
+    "Tools": [
+      "Salesforce",
+      "Microsoft Dynamics",
+      "Jira",
+      "Confluence",
+      "Tableau"
+    ]
+  },
+  "Solutions Architect": {
+    "Technical Skills": [
+      "System integration",
+      "AWS",
+      "Azure",
+      "Solution design",
+      "Microservices",
+      "REST APIs",
+      "TOGAF",
+      "Cloud migration",
+      "API design",
+      "Enterprise architecture",
+      "Scalability"
+    ],
+    "Soft Skills": [
+      "Stakeholder alignment",
+      "Leadership",
+      "Communication",
+      "Collaboration",
+      "Strategic thinking"
+    ],
+    "Tools": [
+      "Enterprise Architect",
+      "Lucidchart",
+      "AWS Well-Architected Tool",
+      "Visio",
+      "Confluence"
+    ]
+  },
+  "Enterprise Architect": {
+    "Technical Skills": [
+      "TOGAF",
+      "Enterprise strategy",
+      "IT governance",
+      "Business alignment",
+      "Cloud architecture",
+      "Zachman",
+      "Roadmapping",
+      "ArchiMate",
+      "Enterprise integration",
+      "Digital transformation"
+    ],
+    "Soft Skills": [
+      "Stakeholder management",
+      "Leadership",
+      "Strategic thinking",
+      "Communication",
+      "Collaboration"
+    ],
+    "Tools": [
+      "ArchiMate",
+      "Sparx Enterprise Architect",
+      "Lucidchart",
+      "Visio",
+      "Confluence"
+    ]
+  },
+  "Technical Writer": {
+    "Technical Skills": [
+      "Technical documentation",
+      "API documentation",
+      "Markdown",
+      "DITA",
+      "User manuals",
+      "Editing",
+      "Content management",
+      "Information architecture",
+      "Style guides"
+    ],
+    "Soft Skills": [
+      "Communication",
+      "Attention to detail",
+      "Collaboration",
+      "Clarity",
+      "Time management"
+    ],
+    "Tools": [
+      "Confluence",
+      "MadCap Flare",
+      "Oxygen XML",
+      "Git",
+      "Adobe RoboHelp",
+      "Doxygen"
+    ]
+  },
+  "Release Manager": {
+    "Technical Skills": [
+      "Release planning",
+      "CI/CD",
+      "Change management",
+      "Version control",
+      "Agile",
+      "Risk assessment",
+      "Deployment strategies",
+      "Rollback planning",
+      "Release automation"
+    ],
+    "Soft Skills": [
+      "Communication",
+      "Coordination",
+      "Collaboration",
+      "Time management",
+      "Leadership"
+    ],
+    "Tools": [
+      "Git",
+      "Jenkins",
+      "Jira",
+      "GitLab",
+      "ServiceNow",
+      "Bamboo"
+    ]
+  },
+  "Data Engineer": {
+    "Technical Skills": [
+      "ETL",
+      "SQL",
+      "NoSQL",
+      "Hadoop",
+      "Spark",
+      "Data warehousing",
+      "Python",
+      "Data pipelines",
+      "Data modeling",
+      "Big data processing",
+      "Data integration",
+      "Cloud data platforms"
+    ],
+    "Soft Skills": [
+      "Problem-solving",
+      "Collaboration",
+      "Analytical thinking",
+      "Attention to detail",
+      "Communication"
+    ],
+    "Tools": [
+      "Airflow",
+      "AWS Redshift",
+      "Snowflake",
+      "Apache Kafka",
+      "Databricks",
+      "Google BigQuery"
+    ]
+  },
+  "AI Engineer": {
+    "Technical Skills": [
+      "Python",
+      "TensorFlow",
+      "PyTorch",
+      "NLP",
+      "Deep learning",
+      "Model optimization",
+      "MLOps",
+      "Docker",
+      "AWS",
+      "Data preprocessing",
+      "Computer vision",
+      "Reinforcement learning",
+      "Model deployment"
+    ],
+    "Soft Skills": [
+      "Analytical thinking",
+      "Collaboration",
+      "Problem-solving",
+      "Communication",
+      "Innovation"
+    ],
+    "Tools": [
+      "Jupyter Notebook",
+      "Git",
+      "AWS SageMaker",
+      "MLflow",
+      "Kubernetes",
+      "Hugging Face"
+    ]
+  },
+  "Mobile App Developer": {
+    "Technical Skills": [
+      "Swift",
+      "Kotlin",
+      "Flutter",
+      "React Native",
+      "REST APIs",
+      "Mobile UI",
+      "Agile",
+      "iOS development",
+      "Android development",
+      "Cross-platform development",
+      "Unit testing",
+      "App performance optimization"
+    ],
+    "Soft Skills": [
+      "Problem-solving",
+      "Collaboration",
+      "Communication",
+      "Creativity",
+      "Attention to detail"
+    ],
+    "Tools": [
+      "Xcode",
+      "Android Studio",
+      "Git",
+      "Firebase",
+      "Postman",
+      "Fastlane"
+    ]
+  }
+}
