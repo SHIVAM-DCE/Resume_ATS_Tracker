@@ -12,7 +12,7 @@ resources:
 
 variables:
   resourceGroup: 'ats-resume-scanner-rg'   # ✅ your correct resource group
-  slotName: 'staging'                      # ✅ the slot you want to deploy to
+  #slotName: 'staging'                      # ✅ the slot you want to deploy to
   appServiceName: 'ats-resume-tracker'     # ✅ your actual App Service name (fixed!)
   azureSubscription: 'Resume-ATS-Tracker-sc'  # ✅ your Azure service connection name
   webAppName: 'ats-resume-tracker'          # ✅ the web app name (fixed!)
@@ -24,10 +24,10 @@ steps:
   - task: DownloadPipelineArtifact@2
     inputs:
       buildType: 'specific'
-      project: '$(System.TeamProject)'
-      pipeline: '$(resources.pipeline.cd.pipelineId)'   # ✅ uses the correct alias 'cd'
-      runVersion: 'latest'
-      artifact: 'ats-resume-tracker'
+      #project: '$(System.TeamProject)'
+      #pipeline: '$(resources.pipeline.cd.pipelineId)'   # ✅ uses the correct alias 'cd'
+      #runVersion: 'latest'
+      #artifact: 'ats-resume-tracker'
       path: '$(Build.ArtifactStagingDirectory)'
 
   # ✅ Deploy to the specified App Service slot
@@ -39,5 +39,5 @@ steps:
       appName: '$(appServiceName)'                   # ✅ correct app name
       package: '$(Build.ArtifactStagingDirectory)/ats-resume-tracker.zip'
       resourceGroupName: '$(resourceGroup)'
-      deployToSlotOrASE: false                       # ✅ enable slot deploy
+      #deployToSlotOrASE: false                       # ✅ enable slot deploy
      # slotName: '$(slotName)'                        # ✅ slot name to deploy to
