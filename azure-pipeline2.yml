@@ -7,8 +7,7 @@ resources:
       source: Resume_ATS_Tracker      # ✅ this must match the pipeline name in Azure DevOps, NOT the repo
       trigger:
         branches:
-          include:
-            - main
+          - main
 
 variables:
   resourceGroup: 'ats-resume-scanner-rg'   # ✅ your correct resource group
