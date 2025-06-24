@@ -3,40 +3,34 @@ pr: none
 
 resources:
   pipelines:
-    - pipeline: cd                    # ✅ alias for the source pipeline
-      source: Resume_ATS_Tracker      # ✅ this must match the pipeline name in Azure DevOps, NOT the repo
+    - pipeline: cd
+      source: Resume_ATS_Tracker
       trigger:
         branches:
           - main
 
 variables:
-  resourceGroup: 'ats-resume-scanner-rg'   # ✅ your correct resource group
-  #slotName: 'staging'                      # ✅ the slot you want to deploy to
-  appServiceName: 'ats-resume-tracker'     # ✅ your actual App Service name (fixed!)
-  azureSubscription: 'Resume-ATS-Tracker-sc'  # ✅ your Azure service connection name
-  webAppName: 'ats-resume-tracker'          # ✅ the web app name (fixed!)
+  resourceGroup: 'ats-resume-scanner-rg'
+  appServiceName: 'ats-resume-tracker'
+  azureSubscription: 'Resume-ATS-Tracker-sc'
 pool:
   vmImage: 'ubuntu-latest'
 
 steps:
-  # ✅ Download the build artifact from your build pipeline
   - task: DownloadPipelineArtifact@2
+    displayName: 'Download build artifact from CI pipeline'
     inputs:
-      buildType: 'specific'
-      #project: '$(System.TeamProject)'
-      #pipeline: '$(resources.pipeline.cd.pipelineId)'   # ✅ uses the correct alias 'cd'
-      #runVersion: 'latest'
-      #artifact: 'ats-resume-tracker'
+      buildType: 'latest'
+      project: '$(System.TeamProject)'
+      pipeline: '$(resources.pipeline.cd.pipelineId)'
+      artifact: 'ats-resume-tracker'
       path: '$(Build.ArtifactStagingDirectory)'
 
-  # ✅ Deploy to the specified App Service slot
   - task: AzureWebApp@1
-    displayName: 'Deploy to Azure Web App Slot'
+    displayName: 'Deploy to Azure Web App'
     inputs:
       azureSubscription: '$(azureSubscription)'
       appType: 'webAppLinux'
-      appName: '$(appServiceName)'                   # ✅ correct app name
+      appName: '$(appServiceName)'
       package: '$(Build.ArtifactStagingDirectory)/ats-resume-tracker.zip'
       resourceGroupName: '$(resourceGroup)'
-      #deployToSlotOrASE: false                       # ✅ enable slot deploy
-     # slotName: '$(slotName)'                        # ✅ slot name to deploy to
