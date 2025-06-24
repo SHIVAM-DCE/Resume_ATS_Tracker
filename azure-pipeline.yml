@@ -1,0 +1,72 @@
+name: Merge Feature Branch to Main
+
+trigger:
+  branches:
+    include:
+      - feature/feature1  # Only this branch triggers the pipeline
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  FEATURE_BRANCH: feature/feature1  # Define the feature branch to merge
+
+steps:
+  # ✅ Checkout repo with push permission
+  - checkout: self
+    persistCredentials: true
+
+  # ✅ Set up Node.js
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '20'
+    displayName: 'Set up Node.js'
+
+  # ✅ Install dependencies
+  - script: npm install
+    displayName: 'Install dependencies'
+
+  # ✅ Run placeholder tests (replace later!)
+  - script: echo "No tests defined — skipping test step."
+    displayName: 'Run tests'
+
+  # ✅ Configure Git identity
+  - script: |
+      git config user.name "SHIVAM-DCE"
+      git config user.email "shivamkumarkaimur@gmail.com"
+    displayName: 'Configure Git'
+
+  # ✅ Merge feature branch to main
+  - script: |
+      echo "Merging $(FEATURE_BRANCH) into main..."
+
+      # Make sure main is up to date
+      git fetch origin main
+      git checkout main
+      git pull origin main
+
+      # Merge the feature branch
+      git merge --no-ff origin/$(FEATURE_BRANCH) -m "Auto merge $(FEATURE_BRANCH) into main"
+
+      # Push updated main
+      git push origin main
+    displayName: 'Merge to main'
+
+  # ✅ Delete the feature branch on remote, if it still exists
+  - script: |
+      echo "Checking if branch $(FEATURE_BRANCH) exists on remote before deleting..."
+
+      # Only delete if it exists
+      if git ls-remote --exit-code --heads origin $(FEATURE_BRANCH); then
+        echo "Branch exists — deleting..."
+        git push origin --delete refs/heads/$(FEATURE_BRANCH)
+      else
+        echo "Branch not found on remote — skipping delete."
+      fi
+    displayName: 'Delete feature branch'
+
+
+
+
+
+
