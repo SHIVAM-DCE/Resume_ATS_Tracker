@@ -4,8 +4,8 @@ pr: none
 
 resources:
   pipelines:
-    - pipeline: azure-pipelines.yml
-      source: azure-pipelines
+    - pipeline: cd
+      source: SHIVAM-DCE.Resume_ATS_Tracker
       trigger:
         branches:
           include:
