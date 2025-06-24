@@ -15,7 +15,7 @@ variables:
   slotName: 'staging'                      # ✅ the slot you want to deploy to
   appServiceName: 'ats-resume-tracker'     # ✅ your actual App Service name (fixed!)
   azureSubscription: 'Resume-ATS-Tracker-sc'  # ✅ your Azure service connection name
-
+  webAppName: 'ats-resume-tracker'          # ✅ the web app name (fixed!)
 pool:
   vmImage: 'ubuntu-latest'
 
@@ -35,7 +35,7 @@ steps:
     displayName: 'Deploy to Azure Web App Slot'
     inputs:
       azureSubscription: '$(azureSubscription)'
-      appType: 'webApp'
+      appType: 'webAppLinux'
       appName: '$(appServiceName)'                   # ✅ correct app name
       package: '$(Build.ArtifactStagingDirectory)/ats-resume-tracker.zip'
       resourceGroupName: '$(resourceGroup)'
