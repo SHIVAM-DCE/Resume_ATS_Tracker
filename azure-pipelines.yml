@@ -3,7 +3,8 @@ name: Merge Feature Branch to Main
 trigger:
   branches:
     include:
-      - feature/feature1  # Only this branch triggers the pipeline
+      - main
+      - feature/feature1
 
 pool:
   vmImage: 'ubuntu-latest'
