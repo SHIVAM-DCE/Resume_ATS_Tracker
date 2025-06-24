@@ -3,8 +3,8 @@ pr: none
 
 resources:
   pipelines:
-    - pipeline: cd                    # ✅ your alias for this pipeline resource
-      source: SHIVAM-DCE.Resume_ATS_Tracker  # ✅ the pipeline name in Azure DevOps
+    - pipeline: cd
+      source: Resume_ATS_Tracker   # ✅ must match the Azure Pipeline name
       trigger:
         branches:
           include:
@@ -24,7 +24,7 @@ steps:
     inputs:
       buildType: 'specific'
       project: '$(System.TeamProject)'
-      pipeline: '$(resources.pipeline.cd.pipelineId)'  # ✅ match alias: cd
+      pipeline: '$(resources.pipeline.cd.pipelineId)'   # ✅ match alias 'cd'
       runVersion: 'latest'
       artifact: 'ats-resume-tracker'
       path: '$(Build.ArtifactStagingDirectory)'
