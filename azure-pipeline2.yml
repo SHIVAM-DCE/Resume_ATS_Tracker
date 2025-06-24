@@ -1,0 +1,44 @@
+# azure-pipeline2.yml
+trigger: none
+pr: none
+
+resources:
+  pipelines:
+    - pipeline: buildPipeline
+      source: azure-pipelines
+      trigger:
+        branches:
+          include:
+            - main
+
+variables:
+  resourceGroup: 'ats-resume-scanner-rg'
+  slotName: 'staging'  # or your slot name
+  # app name is here
+  appServiceName: 'your-app-service-name'
+  # service connection name is here
+  azureSubscription: 'your-azure-service-connection-name'
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+  - task: DownloadPipelineArtifact@2
+    inputs:
+      buildType: 'specific'
+      project: '$(System.TeamProject)'
+      pipeline: '$(resources.pipeline.buildPipeline.pipelineId)'
+      runVersion: 'latest'
+      artifact: 'ats-resume-tracker'
+      path: '$(Build.ArtifactStagingDirectory)'
+
+  - task: AzureWebApp@1
+    displayName: 'Deploy to Azure Web App'
+    inputs:
+      azureSubscription: '$(azureSubscription)'
+      appType: 'webApp'
+      appName: '$(appServiceName)'
+      package: '$(Build.ArtifactStagingDirectory)/ats-resume-tracker.zip'
+      resourceGroupName: '$(resourceGroup)'
+      deployToSlotOrASE: true
+      slotName: '$(slotName)'
