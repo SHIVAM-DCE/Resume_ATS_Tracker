@@ -1,3 +1,7 @@
+# ===============================
+# ✅ CI Pipeline: Builds + Merges + Publishes Artifact
+# ===============================
+
 name: Merge Feature Branch to Main
 
 trigger:
@@ -10,14 +14,14 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  FEATURE_BRANCH: feature/feature1  # Define the feature branch to merge
+  FEATURE_BRANCH: feature/feature1  # Branch to merge
 
 steps:
-  # ✅ Checkout repo with push permission
+  # ✅ Checkout with push permission
   - checkout: self
     persistCredentials: true
 
-  # ✅ Set up Node.js
+  # ✅ Setup Node.js
   - task: NodeTool@0
     inputs:
       versionSpec: '20'
@@ -27,7 +31,7 @@ steps:
   - script: npm install
     displayName: 'Install dependencies'
 
-  # ✅ Run placeholder tests (replace later!)
+  # ✅ Run tests (placeholder)
   - script: echo "No tests defined — skipping test step."
     displayName: 'Run tests'
 
@@ -40,42 +44,35 @@ steps:
   # ✅ Merge feature branch to main
   - script: |
       echo "Merging $(FEATURE_BRANCH) into main..."
-
-      # Make sure main is up to date
       git fetch origin main
       git checkout main
       git pull origin main
-
-      # Merge the feature branch
       git merge --no-ff origin/$(FEATURE_BRANCH) -m "Auto merge $(FEATURE_BRANCH) into main"
-
-      # Push updated main
       git push origin main
-    displayName: 'Merge to main'
+    displayName: 'Merge feature branch to main'
 
-  # ✅ Delete the feature branch on remote, if it still exists
+  # ✅ Delete feature branch if it exists
   - script: |
-      echo "Checking if branch $(FEATURE_BRANCH) exists on remote before deleting..."
-
-      # Only delete if it exists
+      echo "Checking if branch $(FEATURE_BRANCH) exists on remote..."
       if git ls-remote --exit-code --heads origin $(FEATURE_BRANCH); then
         echo "Branch exists — deleting..."
         git push origin --delete refs/heads/$(FEATURE_BRANCH)
       else
-        echo "Branch not found on remote — skipping delete."
+        echo "Branch not found — skipping delete."
       fi
-    displayName: 'Delete feature branch'
+    displayName: 'Delete feature branch on remote'
 
-  # ✅ Archive the repository as a build artifact (on main branch only)
+  # ✅ Archive repo as artifact (ONLY on main)
   - script: |
       if [ "$(Build.SourceBranchName)" = "main" ]; then
-        echo "Archiving and publishing artifact on main branch..."
+        echo "Archiving source..."
         zip -r $(Build.ArtifactStagingDirectory)/ats-resume-tracker.zip .
       else
-        echo "Not on main branch, skipping artifact archive."
+        echo "Not on main branch — skipping archive."
       fi
-    displayName: 'Archive source as artifact (main only)'
+    displayName: 'Archive source (main only)'
 
+  # ✅ Publish build artifact (ONLY on main)
   - task: PublishBuildArtifacts@1
     condition: eq(variables['Build.SourceBranchName'], 'main')
     inputs:
@@ -83,9 +80,3 @@ steps:
       ArtifactName: 'ats-resume-tracker'
       publishLocation: 'Container'
     displayName: 'Publish build artifact (main only)'
-
-
-
-
-
-

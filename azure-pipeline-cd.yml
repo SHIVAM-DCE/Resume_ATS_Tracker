@@ -1,10 +1,14 @@
+# ===============================
+# ✅ CD Pipeline: Deploys the build artifact to Azure
+# ===============================
+
 trigger: none
 pr: none
 
 resources:
   pipelines:
     - pipeline: buildPipeline
-      source: SHIVAM-DCE.Resume_ATS_Tracker
+      source: Resume_ATS_CI  # ✅ CHANGE to EXACT CI pipeline name in Azure DevOps
       trigger:
         branches:
           - main
@@ -13,19 +17,23 @@ variables:
   resourceGroup: 'ats-resume-scanner-rg'
   appServiceName: 'ats-resume-tracker'
   azureSubscription: 'Resume-ATS-Tracker-sc'
+
 pool:
   vmImage: 'ubuntu-latest'
 
 steps:
+  # ✅ Download the artifact from the latest successful build
   - task: DownloadPipelineArtifact@2
     displayName: 'Download build artifact from CI pipeline'
     inputs:
       buildType: 'specific'
       project: '$(System.TeamProject)'
-      pipeline: '$(resources.pipeline.buildPipeline.runID)'
+      pipeline: $(resources.pipeline.buildPipeline.pipelineID)
+      runVersion: 'latest'
       artifact: 'ats-resume-tracker'
       path: '$(Build.ArtifactStagingDirectory)'
 
+  # ✅ Deploy to Azure Web App
   - task: AzureWebApp@1
     displayName: 'Deploy to Azure Web App'
     inputs:
