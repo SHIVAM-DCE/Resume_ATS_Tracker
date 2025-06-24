@@ -52,6 +52,24 @@ steps:
       git push origin main
     displayName: 'Merge to main'
 
+  # ✅ Archive the repository as a build artifact
+  - task: ArchiveFiles@2
+    inputs:
+      rootFolderOrFile: '$(Build.SourcesDirectory)'
+      includeRootFolder: false
+      archiveType: 'zip'
+      archiveFile: '$(Build.ArtifactStagingDirectory)/ats-resume-tracker.zip'
+      replaceExistingArchive: true
+    displayName: 'Archive source as artifact'
+
+  # ✅ Publish the build artifact
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)/ats-resume-tracker.zip'
+      ArtifactName: 'ats-resume-tracker'
+      publishLocation: 'Container'
+    displayName: 'Publish build artifact'
+
   # ✅ Delete the feature branch on remote, if it still exists
   - script: |
       echo "Checking if branch $(FEATURE_BRANCH) exists on remote before deleting..."

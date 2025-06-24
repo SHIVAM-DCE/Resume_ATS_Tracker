@@ -3,8 +3,8 @@ pr: none
 
 resources:
   pipelines:
-    - pipeline: cd
-      source: Resume_ATS_Tracker   # ✅ must match the Azure Pipeline name
+    - pipeline: buildPipeline
+      source: azure-pipelines
       trigger:
         branches:
           include:
@@ -24,10 +24,11 @@ steps:
     inputs:
       buildType: 'specific'
       project: '$(System.TeamProject)'
-      pipeline: '$(resources.pipeline.cd.pipelineId)'   # ✅ match alias 'cd'
+      pipeline: '$(resources.pipeline.buildPipeline.pipelineId)'
       runVersion: 'latest'
       artifact: 'ats-resume-tracker'
       path: '$(Build.ArtifactStagingDirectory)'
+    displayName: 'Download build artifact from CI pipeline'
 
   - task: AzureWebApp@1
     displayName: 'Deploy to Azure Web App'
