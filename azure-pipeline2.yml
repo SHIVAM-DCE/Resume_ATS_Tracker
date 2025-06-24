@@ -22,10 +22,9 @@ pool:
 steps:
   - task: DownloadPipelineArtifact@2
     inputs:
-      buildType: 'specific'
+      buildType: 'latest'
       project: '$(System.TeamProject)'
       pipeline: '$(resources.pipeline.buildPipeline.pipelineId)'
-      runVersion: 'latest'
       artifact: 'ats-resume-tracker'
       path: '$(Build.ArtifactStagingDirectory)'
     displayName: 'Download build artifact from CI pipeline'
