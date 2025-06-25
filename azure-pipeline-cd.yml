@@ -7,8 +7,7 @@ resources:
       source: Merge Feature Branch to Main  # Replace with SHIVAM-DCE.Resume_ATS_Tracker if needed
       trigger:
         branches:
-          include:
-            - main
+          - main
 
 variables:
   resourceGroup: 'ats-resume-scanner-rg'
@@ -22,7 +21,7 @@ pool:
 
 steps:
   - script: |
-      echo "Pipeline ID: $(resources.pipeline.buildPipeline.pipelineID)"
+      echo "Pipeline ID: $(resources.pipeline.buildPipeline.pipelineId)"
       echo "Run ID: $(resources.pipeline.buildPipeline.runID)"
       echo "Repository: $(Build.Repository.Name)"
       echo "Source Branch: $(Build.SourceBranch)"
@@ -33,7 +32,7 @@ steps:
     inputs:
       buildType: 'specific'
       project: '$(System.TeamProject)'
-      pipeline: '$(resources.pipeline.buildPipeline.pipelineID)'
+      pipeline: '$(resources.pipeline.buildPipeline.pipelineId)'
       runId: '$(resources.pipeline.buildPipeline.runID)'
       artifact: '$(artifactName)'
       path: '$(Build.ArtifactStagingDirectory)'
