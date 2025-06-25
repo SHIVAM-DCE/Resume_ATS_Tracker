@@ -1,4 +1,3 @@
-// This module provides a function to call the backend /ai-analysis endpoint from the frontend
 export async function getAIAnalysis(prompt) {
   try {
     const response = await fetch('/ai-analysis', {

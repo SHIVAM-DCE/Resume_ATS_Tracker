@@ -12,17 +12,13 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Serve static frontend files from ../frontend
 app.use(express.static(path.join(__dirname, '../frontend')));
 
-// Fallback: send index.html for any non-API route (for React/HTML SPAs)
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend', 'index.html'));
 });
 
-// ================= File Upload Setup ===================
-
-const uploadDir = path.join(__dirname, 'uploads'); // <-- fixed case to match actual folder
+const uploadDir = path.join(__dirname, 'uploads');
 async function ensureUploadDir() {
   try {
     await fs.mkdir(uploadDir, { recursive: true });
@@ -48,8 +44,6 @@ const upload = multer({
     cb(null, true);
   }
 }).single('resume');
-
-// ================= Skill Extraction ===================
 
 let itRolesSkills = {};
 async function loadSkills() {
@@ -114,8 +108,6 @@ const calculateMatchPercentage = (resumeKeywords, jobKeywords) => {
   };
 };
 
-// ================= Resume Analysis API ===================
-
 app.use(hfProxy);
 
 app.post('/analyze', (req, res) => {
@@ -142,7 +134,6 @@ app.post('/analyze', (req, res) => {
         jobKeywords.allKeywords
       );
 
-      // Call Hugging Face AI analysis
       let aiAnalysis = null;
       try {
         const hfApiKey = process.env.HF_API_KEY;
@@ -177,7 +168,6 @@ app.post('/analyze', (req, res) => {
   });
 });
 
-// ================= Hugging Face Proxy Endpoint ===================
 app.post('/ai-analysis', async (req, res) => {
   try {
     const { prompt } = req.body;
@@ -205,7 +195,6 @@ app.post('/ai-analysis', async (req, res) => {
   }
 });
 
-// ✅ Start server
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
