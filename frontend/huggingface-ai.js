@@ -1,7 +1,7 @@
-// This module provides a function to call the backend /hf-analyze endpoint from the frontend
+// This module provides a function to call the backend /ai-analysis endpoint from the frontend
 export async function getAIAnalysis(prompt) {
   try {
-    const response = await fetch('http://localhost:3000/hf-analyze', {
+    const response = await fetch('/ai-analysis', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ prompt })

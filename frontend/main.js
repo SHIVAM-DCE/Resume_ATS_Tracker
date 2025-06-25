@@ -20,13 +20,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let errorTimeout;
   function showError(message) {
-    console.error('Error displayed:', message);
+    const errorDiv = document.getElementById('error');
     errorDiv.textContent = message;
-    errorDiv.classList.add('error-visible');
-    if (errorTimeout) clearTimeout(errorTimeout);
-    errorTimeout = setTimeout(() => {
-      errorDiv.classList.remove('error-visible');
-    }, 5000);
+    errorDiv.style.display = 'block';
   }
 
   function countWords(text) {
@@ -111,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
     formData.append('resume', resumeFile);
     formData.append('jobDescription', jobDescription);
     try {
-      const response = await axios.post('http://localhost:3000/analyze', formData, {
+      const response = await axios.post('/analyze', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
         timeout: 10000
       });
@@ -205,7 +201,13 @@ document.addEventListener('DOMContentLoaded', () => {
       });
       resultsDiv.style.display = 'block';
     } catch (err) {
-      showError('An error occurred while analyzing. Please try again.');
+      let msg = 'An error occurred while analyzing. Please try again.';
+      if (err.response && err.response.data && err.response.data.error) {
+        msg = err.response.data.error;
+      } else if (err.message) {
+        msg = err.message;
+      }
+      showError(msg);
       console.error('Error during analysis:', err);
     } finally {
       analyzeBtn.disabled = false;

@@ -6,6 +6,7 @@ const cors = require('cors');
 const fs = require('fs').promises;
 const path = require('path');
 const hfProxy = require('./hf-proxy');
+const axios = require('axios');
 
 const app = express();
 app.use(cors());
@@ -21,7 +22,7 @@ app.get('/', (req, res) => {
 
 // ================= File Upload Setup ===================
 
-const uploadDir = path.join(__dirname, 'Uploads');
+const uploadDir = path.join(__dirname, 'uploads'); // <-- fixed case to match actual folder
 async function ensureUploadDir() {
   try {
     await fs.mkdir(uploadDir, { recursive: true });
@@ -141,14 +142,31 @@ app.post('/analyze', (req, res) => {
         jobKeywords.allKeywords
       );
 
-      const aiAnalysis = {
-        positives: resumeKeywords.allKeywords.length > 0 ? 'Strong alignment with job requirements' : 'Some relevant skills detected',
-        negatives: missingKeywords.length > 0 ? `Missing key skills: ${missingKeywords.join(', ')}` : 'No significant gaps',
-        suggestions: 'Highlight specific projects related to job requirements. Use action verbs to describe achievements.',
-        overall: matchPercentage >= 60
-          ? `Suitable for the role with a ${matchPercentage}% match`
-          : `Not suitable due to insufficient skill overlap (${matchPercentage}%)`
-      };
+      // Call Hugging Face AI analysis
+      let aiAnalysis = null;
+      try {
+        const hfApiKey = process.env.HF_API_KEY;
+        if (!hfApiKey) throw new Error('Hugging Face API key not set in environment');
+        const prompt = `You are an expert recruiter analyzing a resume against a job description for an ATS tool.\nDo NOT explain, repeat, or reference these instructions.\nDo NOT show any calculation steps, skill counting, or meta-analysis in your output.\nIf the ATS match score is 60% or higher, highlight the candidate's strengths and suitability, providing 1-2 specific suggestions for resume improvement.\nIf below 60%, emphasize skill gaps and offer constructive feedback on how to improve the resume for the role.\nThe summary must be concise (50-100 words).\nInclude eligible or not for the post in the Overall Result.\n\nResume: ${resumeText}\nJob Description: ${jobDescription}\n\nOutput Format (no extra lines, no commentary, no calculations):\nPositives\nNegatives\nSuggestions\nOverall Result\n\nMake sure to provide a clear, structured response without any additional explanations or meta-analysis.`;
+        const hfResponse = await axios.post(
+          'https://api-inference.huggingface.co/v1/chat/completions',
+          {
+            model: 'meta-llama/Meta-Llama-3-8B-Instruct',
+            messages: [{ role: 'user', content: prompt }],
+            max_tokens: 256
+          },
+          {
+            headers: {
+              'Authorization': `Bearer ${hfApiKey}`,
+              'Content-Type': 'application/json'
+            },
+            timeout: 20000
+          }
+        );
+        aiAnalysis = hfResponse.data;
+      } catch (hfErr) {
+        aiAnalysis = { error: `Hugging Face API error: ${hfErr.response?.data?.error || hfErr.message}` };
+      }
 
       await fs.unlink(resume.path).catch(err => console.error('File delete error:', err.message));
       res.json({ jobKeywords, resumeKeywords, matchPercentage, missingKeywords, aiAnalysis });
@@ -159,8 +177,40 @@ app.post('/analyze', (req, res) => {
   });
 });
 
+// ================= Hugging Face Proxy Endpoint ===================
+app.post('/ai-analysis', async (req, res) => {
+  try {
+    const { prompt } = req.body;
+    if (!prompt) return res.status(400).json({ error: 'Prompt is required' });
+    const hfApiKey = process.env.HF_API_KEY;
+    if (!hfApiKey) return res.status(500).json({ error: 'Hugging Face API key not set in environment' });
+    const response = await axios.post(
+      'https://api-inference.huggingface.co/v1/chat/completions',
+      {
+        model: 'meta-llama/Meta-Llama-3-8B-Instruct',
+        messages: [{ role: 'user', content: prompt }],
+        max_tokens: 256
+      },
+      {
+        headers: {
+          'Authorization': `Bearer ${hfApiKey}`,
+          'Content-Type': 'application/json'
+        },
+        timeout: 20000
+      }
+    );
+    res.json(response.data);
+  } catch (err) {
+    res.status(500).json({ error: `Hugging Face API error: ${err.response?.data?.error || err.message}` });
+  }
+});
+
 // ✅ Start server
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
+  console.log(`Local:   http://localhost:${port}`);
+  if (process.env.WEBSITE_HOSTNAME) {
+    console.log(`Azure:   https://${process.env.WEBSITE_HOSTNAME}`);
+  }
 });
