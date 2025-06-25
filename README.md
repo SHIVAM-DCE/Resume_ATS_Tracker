@@ -148,13 +148,7 @@ This project is licensed under the MIT License.
 
 ---
 
-## Contact
 
-- **GitHub:** [shivam-dce](https://github.com/shivam-dce)
-- **Email:** shivamkumarkaimur@gmail.com
-- **LinkedIn:** [Shivam Kumar](https://www.linkedin.com/in/shivamkumarkaimur/)
-
----
 
 ## Workflow
 
@@ -192,3 +186,13 @@ To use as a test case:
 
 **Note:**  
 AI analysis may be unavailable if the Hugging Face API monthly quota is exceeded on the free plan.
+
+
+
+## Contact
+
+- **GitHub:** [shivam-dce](https://github.com/shivam-dce)
+- **Email:** shivamkumarkaimur@gmail.com
+- **LinkedIn:** [Shivam Kumar](https://www.linkedin.com/in/shivamkumarkaimur/)
+
+---
