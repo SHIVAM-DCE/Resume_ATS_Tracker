@@ -7,8 +7,19 @@ const path = require('path');
 const hfProxy = require('./hf-proxy');
 
 const app = express();
+app.use(cors());
+app.use(express.json());
 
-// Ensure uploads directory exists
+// Serve static frontend files from ../frontend
+app.use(express.static(path.join(__dirname, '../frontend')));
+
+// Fallback: send index.html for any non-API route (for React/HTML SPAs)
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend', 'index.html'));
+});
+
+// ================= File Upload Setup ===================
+
 const uploadDir = path.join(__dirname, 'Uploads');
 async function ensureUploadDir() {
   try {
@@ -20,7 +31,6 @@ async function ensureUploadDir() {
 }
 ensureUploadDir();
 
-// Configure multer
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, uploadDir),
   filename: (req, file, cb) => cb(null, `${Date.now()}-${file.originalname}`)
@@ -31,19 +41,14 @@ const upload = multer({
   limits: { fileSize: 5 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
     if (file.mimetype !== 'application/pdf') {
-      console.error('Invalid file type:', file.mimetype);
       return cb(new Error('Only PDF files are allowed'));
     }
     cb(null, true);
   }
 }).single('resume');
 
-app.use(cors());
-app.use(express.json());
-app.use(express.static(path.join(__dirname, '../frontend')));
-app.use(hfProxy);
+// ================= Skill Extraction ===================
 
-// Load skills JSON
 let itRolesSkills = {};
 async function loadSkills() {
   try {
@@ -57,13 +62,11 @@ async function loadSkills() {
 }
 loadSkills();
 
-// Function to escape special regex characters
 function escapeRegex(string) {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
 const extractKeywords = (text) => {
-  console.log('Extracting keywords from text (length:', text.length, ')');
   const technicalSkills = new Set();
   const softSkills = new Set();
   const tools = new Set();
@@ -71,31 +74,16 @@ const extractKeywords = (text) => {
 
   for (const role of Object.values(itRolesSkills)) {
     role['Technical Skills']?.forEach(skill => {
-      try {
-        const escapedSkill = escapeRegex(skill);
-        const regex = new RegExp(`\\b${escapedSkill.toLowerCase()}\\b`, 'i');
-        if (regex.test(textLower)) technicalSkills.add(skill);
-      } catch (err) {
-        console.error(`Invalid regex for skill "${skill}":`, err.message);
-      }
+      const regex = new RegExp(`\\b${escapeRegex(skill.toLowerCase())}\\b`, 'i');
+      if (regex.test(textLower)) technicalSkills.add(skill);
     });
     role['Soft Skills']?.forEach(skill => {
-      try {
-        const escapedSkill = escapeRegex(skill);
-        const regex = new RegExp(`\\b${escapedSkill.toLowerCase()}\\b`, 'i');
-        if (regex.test(textLower)) softSkills.add(skill);
-      } catch (err) {
-        console.error(`Invalid regex for soft skill "${skill}":`, err.message);
-      }
+      const regex = new RegExp(`\\b${escapeRegex(skill.toLowerCase())}\\b`, 'i');
+      if (regex.test(textLower)) softSkills.add(skill);
     });
     role['Tools']?.forEach(tool => {
-      try {
-        const escapedTool = escapeRegex(tool);
-        const regex = new RegExp(`\\b${escapedTool.toLowerCase()}\\b`, 'i');
-        if (regex.test(textLower)) tools.add(tool);
-      } catch (err) {
-        console.error(`Invalid regex for tool "${tool}":`, err.message);
-      }
+      const regex = new RegExp(`\\b${escapeRegex(tool.toLowerCase())}\\b`, 'i');
+      if (regex.test(textLower)) tools.add(tool);
     });
   }
 
@@ -112,7 +100,6 @@ const extractKeywords = (text) => {
 };
 
 const calculateMatchPercentage = (resumeKeywords, jobKeywords) => {
-  console.log('Calculating match percentage');
   const resumeSet = new Set(resumeKeywords.map(k => k.toLowerCase()));
   const jobSet = new Set(jobKeywords.map(k => k.toLowerCase()));
   const matchingKeywords = [...resumeSet].filter(k => jobSet.has(k));
@@ -125,61 +112,33 @@ const calculateMatchPercentage = (resumeKeywords, jobKeywords) => {
   };
 };
 
+// ================= Resume Analysis API ===================
+
+app.use(hfProxy);
+
 app.post('/analyze', (req, res) => {
-  console.log('POST /analyze requested');
   upload(req, res, async (err) => {
-    if (err) {
-      console.error('Multer error:', err.message);
-      return res.status(400).json({ error: err.message });
+    if (err) return res.status(400).json({ error: err.message });
+
+    const { jobDescription } = req.body;
+    const resume = req.file;
+
+    if (!resume || !jobDescription?.trim()) {
+      return res.status(400).json({ error: 'Please provide both a job description and a PDF resume' });
     }
 
     try {
-      const { jobDescription } = req.body;
-      const resume = req.file;
-
-      console.log('Inputs:', {
-        jobDescription: jobDescription ? `${jobDescription.slice(0, 20)}...` : 'Missing',
-        resume: resume ? resume.originalname : 'Missing'
-      });
-
-      if (!resume || !jobDescription) {
-        console.error('Validation failed: Missing inputs');
-        return res.status(400).json({ error: 'Please provide both a job description and a resume' });
-      }
-
-      if (!jobDescription.trim()) {
-        console.error('Validation failed: Empty job description');
-        return res.status(400).json({ error: 'Job description cannot be empty' });
-      }
-
-      try {
-        await fs.access(resume.path);
-        console.log('Resume file accessible:', resume.path);
-      } catch (err) {
-        console.error('Error accessing resume file:', err.message);
-        return res.status(500).json({ error: 'Unable to access uploaded resume file' });
-      }
-
-      console.log('Parsing PDF:', resume.path);
-      let pdfData;
-      try {
-        pdfData = await pdfParse(resume.path);
-      } catch (err) {
-        console.error('PDF parsing error:', err.message);
-        return res.status(400).json({ error: 'Invalid or corrupted PDF file' });
-      }
+      await fs.access(resume.path);
+      const pdfData = await pdfParse(resume.path);
       const resumeText = pdfData.text;
-      console.log('PDF text extracted, length:', resumeText.length);
 
       const jobKeywords = extractKeywords(jobDescription);
       const resumeKeywords = extractKeywords(resumeText);
-      console.log('Keywords:', { jobKeywords, resumeKeywords });
 
       const { matchPercentage, missingKeywords } = calculateMatchPercentage(
         resumeKeywords.allKeywords,
         jobKeywords.allKeywords
       );
-      console.log('Match result:', { matchPercentage, missingKeywords });
 
       const aiAnalysis = {
         positives: resumeKeywords.allKeywords.length > 0 ? 'Strong alignment with job requirements' : 'Some relevant skills detected',
@@ -190,21 +149,15 @@ app.post('/analyze', (req, res) => {
           : `Not suitable due to insufficient skill overlap (${matchPercentage}%)`
       };
 
-      await fs.unlink(resume.path).catch(err => console.error('Error deleting file:', err.message));
+      await fs.unlink(resume.path).catch(err => console.error('File delete error:', err.message));
+      res.json({ jobKeywords, resumeKeywords, matchPercentage, missingKeywords, aiAnalysis });
 
-      res.json({
-        jobKeywords,
-        resumeKeywords,
-        matchPercentage,
-        missingKeywords,
-        aiAnalysis
-      });
     } catch (err) {
-      console.error('Error in /analyze:', err.message, err.stack);
       res.status(500).json({ error: `Server error: ${err.message}` });
     }
   });
 });
 
-const PORT = 3000;
-app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+// ✅ Start server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
