@@ -1,198 +1,259 @@
 # ATS Resume Tracker
 
-[![MIT License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![Live Demo](https://img.shields.io/badge/demo-online-blue.svg)](https://ats-resume-tracker-cdgcfhake2caeeet.canadacentral-01.azurewebsites.net)
+Check how well your resume matches a job description before you apply. Upload a PDF resume, paste a job description, and get a match score, missing keywords and AI-written feedback in seconds.
 
-## Table of Contents
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![Live Demo](https://img.shields.io/badge/demo-live-blue.svg)](https://resume-ats-tracker-0zkn.onrender.com)
+![Node.js](https://img.shields.io/badge/node-%3E%3D20-339933)
+
+**Live demo:** https://resume-ats-tracker-0zkn.onrender.com
+
+> The app runs on a free hosting tier. After a period of inactivity it goes to sleep, so the first request can take 30 to 60 seconds.
+
+## Table of contents
+
 - [Overview](#overview)
-- [Demo](#demo)
 - [Features](#features)
-- [Requirements](#requirements)
-- [Installation](#installation)
-- [Usage](#usage)
-- [DevOps & Deployment on Azure](#devops--deployment-on-azure)
-- [Architecture & Workflow](#architecture--workflow)
-- [Contribution](#contribution)
+- [Tech stack](#tech-stack)
+- [Project structure](#project-structure)
+- [Getting started](#getting-started)
+- [Configuration](#configuration)
+- [API](#api)
+- [How the match score works](#how-the-match-score-works)
+- [Security](#security)
+- [Deployment and CI/CD](#deployment-and-cicd)
+- [Testing](#testing)
+- [Limitations](#limitations)
+- [Roadmap](#roadmap)
+- [Contributing](#contributing)
 - [License](#license)
 - [Contact](#contact)
 
 ## Overview
 
-ATS Resume Tracker is a web application that helps job seekers optimize their resumes for Applicant Tracking Systems (ATS) by analyzing them against job descriptions. It extracts keywords, calculates a match score, identifies missing skills, and provides AI-powered suggestions using Hugging Face models. The project is built with Node.js, Express, and a modern frontend, and is deployed on Azure for public access.
+Many companies use an Applicant Tracking System (ATS) to filter resumes by keywords before a recruiter reads them. ATS Resume Tracker runs the same kind of check for you.
 
----
+1. It reads your text-based PDF resume.
+2. It extracts technical skills, soft skills and tools from both the resume and the job description.
+3. It compares the two and shows a match score and the keywords you are missing.
+4. It asks an AI model for strengths, weaknesses and suggestions.
 
-## Demo
-
-[![Watch the Demo](https://img.youtube.com/vi/5T5PlRVLw_4/0.jpg)](https://www.youtube.com/watch?v=5T5PlRVLw_4)
-
-**Live Demo:** [Open ATS Resume Tracker](https://ats-resume-tracker-cdgcfhake2caeeet.canadacentral-01.azurewebsites.net)
-
----
+![App screenshot](docs/result.png)
 
 ## Features
 
-- Resume vs. Job Description Analysis: Upload your resume and paste a job description to get a match score.
-- Keyword Extraction: Extracts technical skills, soft skills, and tools from both resume and job description.
-- Missing Keywords: Identifies keywords present in the job description but missing from your resume.
-- AI-Powered Suggestions: Uses Hugging Face AI to provide tailored suggestions for improvement.
-- User-Friendly Interface: Clean, responsive UI for easy use.
-- PDF Resume Support: Accepts text-based PDF resumes up to 5MB.
-- Help & Instructions: Built-in help section for new users.
+- **Match score:** percentage of job-description keywords found in your resume.
+- **Keyword extraction:** technical skills, soft skills and tools, shown as labelled badges.
+- **Missing keywords:** what the job asks for and your resume does not mention.
+- **AI feedback:** positives, negatives, suggestions and an overall verdict, generated with a Hugging Face model.
+- **Full report page:** the latest result is saved in your browser and can be reopened on `results.html`.
+- **PDF support:** text-based PDFs up to 5 MB.
+- **Privacy:** the uploaded file is deleted from the server right after it is read.
+- **Responsive UI:** works on desktop and mobile.
 
----
+## Tech stack
 
-## Requirements
+| Layer       | Technology                                                            |
+| ----------- | --------------------------------------------------------------------- |
+| Backend     | Node.js, Express                                                      |
+| File upload | Multer                                                                |
+| PDF parsing | pdf-parse                                                             |
+| AI analysis | Hugging Face Inference Providers (`meta-llama/Llama-3.1-8B-Instruct`) |
+| Frontend    | HTML, CSS, vanilla JavaScript (ES modules), Axios                     |
+| Security    | Helmet (CSP), express-rate-limit                                      |
+| Hosting     | Render (free tier)                                                    |
+| CI          | Azure DevOps pipeline (install, dependency audit, artifact)           |
 
-- Node.js (v18 or above recommended)
-- npm (v9 or above)
-- Hugging Face API key (for AI analysis)
-- Azure account (for deployment)
-- [Optional] Azure CLI for deployment automation
+## Project structure
 
----
+```
+ats-resume-tracker/
+├── backend/
+│   ├── server.js          # Express app, routes, keyword matching
+│   ├── Imp_skills.json    # Skill, tool and soft-skill dictionary
+│   └── package.json
+├── frontend/
+│   ├── index.html         # Landing page and analyzer
+│   ├── results.html       # Full report page
+│   ├── main.js            # UI logic and API calls
+│   ├── results.js         # Renders the saved report
+│   ├── huggingface-ai.js  # Client helper for the AI endpoint
+│   └── style.css
+├── azure-pipelines.yml    # CI pipeline
+├── package.json           # Root manifest, `npm start` runs the backend
+├── test_cases.pdf         # Sample resume for testing
+├── flowchart.jpg          # Original DevOps workflow diagram
+└── LICENSE
+```
 
-## Quick Start
+## Getting started
 
-1. **Live Demo:** [Open ATS Resume Tracker](https://ats-resume-tracker-cdgcfhake2caeeet.canadacentral-01.azurewebsites.net)
-2. **Try Locally:**
-    - Clone the repo and follow the [Installation](#installation) steps below.
+### Prerequisites
 
----
+- Node.js 20 or newer
+- A Hugging Face access token with permission to call Inference Providers
 
-## Technologies Used
+### Run locally
 
-- Node.js, Express (Backend)
-- HTML, CSS, JavaScript (Frontend)
-- Hugging Face API (AI Analysis)
-- Azure (Deployment)
+```bash
+git clone https://github.com/SHIVAM-DCE/Resume_ATS_Tracker.git
+cd Resume_ATS_Tracker/backend
+npm install
+```
 
----
+Create a `.env` file inside `backend/` (see [Configuration](#configuration)), then start the server:
 
-## Installation
+```bash
+npm start
+```
 
-1. **Clone the repository**
-    ```bash
-    git clone https://github.com/YOUR_GITHUB_ID/ats-resume-tracker.git
-    cd ats-resume-tracker
-    ```
+Open http://localhost:3000. The backend serves the frontend, so no separate static server is needed.
 
-2. **Install backend dependencies**
-    ```bash
-    cd backend
-    npm install
-    ```
+## Configuration
 
-3. **Install frontend dependencies (if any)**
-    ```bash
-    cd ../frontend
-    # If you use npm packages for frontend, otherwise skip
-    npm install
-    ```
+Create `backend/.env`:
 
-4. **Set up environment variables**
-    - Create a `.env` file in the `backend` directory:
-      ```
-      HF_API_KEY=your_huggingface_api_key
-      ```
+```
+HF_API_KEY=your_huggingface_token
+PORT=3000
+```
 
-5. **Run locally**
-    ```bash
-    # In backend directory
-    node server.js
-    # Or, if you use nodemon
-    npx nodemon server.js
-    ```
-    - Open `frontend/index.html` with Live Server or any static server.
+| Variable     | Required | Description                                 |
+| ------------ | -------- | ------------------------------------------- |
+| `HF_API_KEY` | Yes      | Hugging Face token used for the AI analysis |
+| `PORT`       | No       | Port to listen on. Defaults to `3000`       |
 
----
+Never commit `.env`. It is listed in `.gitignore`. On a hosting platform, set `HF_API_KEY` in the platform's environment variable settings instead.
 
-## Usage
+## API
 
-1. Open the app in your browser (locally or via the live Azure link).
-2. Paste the job description and upload your resume (PDF).
-3. Click **Analyze Resume**.
-4. View your match score, extracted keywords, missing keywords, and AI-powered suggestions.
+### `POST /analyze`
 
----
+Parses the resume and returns keyword results. Content type: `multipart/form-data`.
 
-## FAQ
+| Field            | Type | Description          |
+| ---------------- | ---- | -------------------- |
+| `resume`         | file | PDF, up to 5 MB      |
+| `jobDescription` | text | Job description text |
 
-**Q: Why is AI analysis unavailable?**  
-A: The Hugging Face API may have reached its free monthly quota. Try again later or use your own API key.
+Response (JSON):
 
-**Q: What file types are supported?**  
-A: Only text-based PDF resumes up to 5MB are supported.
+```json
+{
+  "jobKeywords": {
+    "technicalSkills": [],
+    "softSkills": [],
+    "tools": [],
+    "allKeywords": []
+  },
+  "resumeKeywords": {
+    "technicalSkills": [],
+    "softSkills": [],
+    "tools": [],
+    "allKeywords": []
+  },
+  "matchPercentage": 30.77,
+  "missingKeywords": [],
+  "resumeText": "...",
+  "jobDescriptionText": "..."
+}
+```
 
-**Q: How do I deploy to my own Azure account?**  
-A: Follow the steps in the [DevOps & Deployment on Azure](#devops--deployment-on-azure) section.
+### `POST /ai-analysis`
 
----
+Sends a prompt to the Hugging Face model and returns its chat completion. Content type: `application/json`.
 
-## Contribution
+```json
+{ "prompt": "..." }
+```
 
-Contributions are welcome! To contribute:
-- Fork the repository
-- Create a new branch (`git checkout -b feature/your-feature`)
-- Commit your changes (`git commit -am 'Add new feature'`)
-- Push to the branch (`git push origin feature/your-feature`)
-- Open a pull request
+Both endpoints are rate limited. Errors are returned as `{ "error": "message" }`.
 
-Please open an issue for suggestions or bug reports.
+## How the match score works
 
----
+1. The skill dictionary in `backend/Imp_skills.json` lists known technical skills, soft skills and tools.
+2. For the resume and the job description, the server finds every dictionary entry that appears as a whole word, ignoring case.
+3. The score is the share of job-description keywords that also appear in the resume:
+
+```
+matchPercentage = matched keywords / job-description keywords x 100
+```
+
+The score is a quick signal, not a prediction of any real ATS. Keywords that are not in the dictionary are not counted.
+
+## Security
+
+Security was treated as a feature, not an afterthought:
+
+- **Security headers and CSP** with Helmet, restricting scripts and styles to the app and the listed CDNs.
+- **Rate limiting** on `/analyze` and `/ai-analysis` (30 requests per 15 minutes per IP) to limit abuse and protect the AI quota.
+- **Upload hardening:** PDF only, 5 MB limit, sanitized file names, and the file is deleted right after parsing, including on error paths.
+- **XSS prevention:** AI output and error messages are escaped before rendering, and the report page builds its DOM with `textContent`.
+- **Secrets management:** the API key is read from environment variables and kept out of version control.
+- **Dependency hygiene:** `npm audit` is part of the CI pipeline and fails the build on high or critical findings.
+- **Reduced attack surface:** unused routes and packages were removed, and CORS is not enabled because the app is same-origin.
+
+## Deployment and CI/CD
+
+The app is deployed on **Render** as a Node web service connected to this repository.
+
+| Setting              | Value                   |
+| -------------------- | ----------------------- |
+| Build command        | `npm install`           |
+| Start command        | `npm start`             |
+| Environment variable | `HF_API_KEY`            |
+| Auto deploy          | On every push to `main` |
+
+The repository also contains an Azure DevOps CI pipeline (`azure-pipelines.yml`) that installs dependencies, runs `npm audit`, and packages the app as a build artifact. An earlier version of this project was deployed to Azure App Service through an Azure DevOps CI/CD pipeline, shown in the diagram below.
+
+![Original DevOps workflow](flowchart.jpg)
+
+## Testing
+
+A sample resume is included for manual testing:
+
+1. Download [`test_cases.pdf`](./test_cases.pdf).
+2. Paste any job description into the app.
+3. Upload the PDF and check the score, keywords and AI feedback.
+
+Also try an image-only (scanned) PDF to confirm the "no readable text" message, and a non-PDF file to confirm it is rejected.
+
+## Limitations
+
+- Only text-based PDFs are supported. Scanned resumes need OCR first.
+- Matching is based on a fixed skill dictionary and exact word matches.
+- AI feedback depends on the Hugging Face free quota and may be unavailable when it is used up.
+- The free hosting tier sleeps when idle, so the first load can be slow.
+
+## Roadmap
+
+- Automated tests for keyword extraction and the API
+- OWASP ZAP scan report and fixes
+- Larger and configurable skill dictionary
+- Synonym handling (for example "K8s" and "Kubernetes")
+- DOCX resume support
+- Downloadable PDF report
+
+## Contributing
+
+Contributions are welcome.
+
+1. Fork the repository.
+2. Create a branch: `git checkout -b feature/your-feature`
+3. Commit your changes: `git commit -m "Add your feature"`
+4. Push the branch: `git push origin feature/your-feature`
+5. Open a pull request.
+
+For bugs or ideas, please open an issue.
 
 ## License
 
-This project is licensed under the MIT License.
-
----
-
-
-
-## Workflow
-
-### DevOps and Application Workflow
-
-![ATS Resume Tracker Workflow](flowchart.jpg)
-
-- **DevOps Process:**
-  - Create Azure account, resource group, app service plan, web app, and service connection in Azure DevOps.
-  - Develop the web app locally, push to GitHub.
-  - CI Pipeline: Merge, build, artifact creation.
-  - CD Pipeline: Download artifact, deploy to Azure App Service.
-  - Web app is live and accessible via public link.
-
-- **App Logic:**
-  - User interacts with the web app UI (main.js, index.html).
-  - Data is sent to backend API (Node.js/Express).
-  - Backend parses PDF, extracts keywords, calls Hugging Face AI API for suggestions.
-  - Results (match score, keywords, AI analysis) are returned to the frontend and displayed to the user.
-
----
-
-
-## Test Case
-
-A sample resume PDF is provided for testing purposes:
-
-- [Download test_cases.pdf](./test_cases.pdf)
-
-To use as a test case:
-1. Download the above PDF.
-2. Upload it in the application to verify resume parsing and analysis features.
-
----
-
-**Note:**  
-AI analysis may be unavailable if the Hugging Face API monthly quota is exceeded on the free plan.
-
-
+Released under the [MIT License](LICENSE).
 
 ## Contact
 
-- **GitHub:** [shivam-dce](https://github.com/shivam-dce)
-- **Email:** shivamkumarkaimur@gmail.com
-- **LinkedIn:** [Shivam Kumar](https://www.linkedin.com/in/shivamkumarkaimur/)
+**Shivam Kumar**
 
----
+- GitHub: [SHIVAM-DCE](https://github.com/SHIVAM-DCE)
+- LinkedIn: [shivam-kumar-231b12261](https://www.linkedin.com/in/shivam-kumar-231b12261)
+- Email: shivamkumarkaimur@gmail.com
