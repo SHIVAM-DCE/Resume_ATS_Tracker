@@ -10,5 +10,8 @@
   },
   "scripts": {
     "start": "node backend/server.js"
+  },
+  "engines": {
+    "node": ">=20"
   }
 }
