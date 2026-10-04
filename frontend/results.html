@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Analysis report | ATS Resume Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css"></head>
+<body>
+<nav><div class="wrap"><a class="logo" href="index.html"><b>ATS</b>Resume Tracker</a><div class="links"><a class="btn line" href="index.html">Back to home</a></div></div></nav>
+<header class="page-head"><div class="wrap"><h1>Analysis report</h1><p>Your latest resume check, saved in this browser.</p></div></header>
+<section><div class="wrap">
+<div class="grid score-row"><div class="box"><div id="match-score"></div></div><div class="box"><h3>Missing keywords</h3><div id="missing-keywords"></div></div></div>
+<div class="grid two" style="margin-top:20px"><div class="box"><h3>Job description keywords</h3><div id="job-keywords-content" class="flex flex-wrap gap-2"></div></div><div class="box"><h3>Resume keywords</h3><div id="resume-keywords-content" class="flex flex-wrap gap-2"></div></div></div>
+<div class="box" id="ai-analysis" style="margin-top:20px"></div>
+<div class="box" style="margin-top:20px"><h3>Extracted requirements</h3><div id="requirements-grid" class="flex flex-wrap gap-2"></div></div>
+<div class="center" style="margin-top:28px"><a class="btn" href="index.html#analyze">Analyze another resume</a></div>
+</div></section>
+<footer><div class="wrap"><div class="copy" style="border:0;margin:0;padding:0">&copy; 2026 Shivam Kumar</div></div></footer>
+<script type="module" src="results.js"></script></body></html>

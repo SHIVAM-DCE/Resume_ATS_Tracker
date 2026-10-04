@@ -2,15 +2,40 @@ require('dotenv').config();
 const express = require('express');
 const multer = require('multer');
 const pdfParse = require('pdf-parse');
-const cors = require('cors');
 const fs = require('fs').promises;
 const path = require('path');
-const hfProxy = require('./hf-proxy');
 const axios = require('axios');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
+
+const HF_URL = 'https://router.huggingface.co/v1/chat/completions';
+const HF_MODEL = 'meta-llama/Llama-3.1-8B-Instruct';
 
 const app = express();
-app.use(cors());
-app.use(express.json());
+app.set('trust proxy', 1);
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", 'https://cdnjs.cloudflare.com'],
+      styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
+      fontSrc: ['https://fonts.gstatic.com'],
+      imgSrc: ["'self'", 'data:'],
+      connectSrc: ["'self'"],
+      objectSrc: ["'none'"],
+      upgradeInsecureRequests: null
+    }
+  }
+}));
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 30,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many requests. Try again in a few minutes.' }
+});
+app.use(['/analyze', '/ai-analysis'], limiter);
+app.use(express.json({ limit: '1mb' }));
 
 app.use(express.static(path.join(__dirname, '../frontend')));
 
@@ -31,7 +56,10 @@ ensureUploadDir();
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, uploadDir),
-  filename: (req, file, cb) => cb(null, `${Date.now()}-${file.originalname}`)
+  filename: (req, file, cb) => {
+    const safeName = path.basename(file.originalname).replace(/[^a-zA-Z0-9._-]/g, '_');
+    cb(null, `${Date.now()}-${safeName}`);
+  }
 });
 
 const upload = multer({
@@ -108,7 +136,18 @@ const calculateMatchPercentage = (resumeKeywords, jobKeywords) => {
   };
 };
 
-app.use(hfProxy);
+function formatHfError(err) {
+  const data = err.response?.data;
+  const status = err.response?.status;
+  let detail;
+  if (data) {
+    detail = typeof data === 'string' ? data : JSON.stringify(data);
+  } else {
+    detail = err.message;
+  }
+  return `Hugging Face API error${status ? ' (' + status + ')' : ''}: ${detail}`;
+}
+
 
 app.post('/analyze', (req, res) => {
   upload(req, res, async (err) => {
@@ -118,13 +157,25 @@ app.post('/analyze', (req, res) => {
     const resume = req.file;
 
     if (!resume || !jobDescription?.trim()) {
+      if (resume) await fs.unlink(resume.path).catch(() => {});
       return res.status(400).json({ error: 'Please provide both a job description and a PDF resume' });
     }
 
     try {
       await fs.access(resume.path);
-      const pdfData = await pdfParse(resume.path);
-      const resumeText = pdfData.text;
+      let pdfData;
+      try {
+        pdfData = await pdfParse(await fs.readFile(resume.path));
+      } catch (pdfParseErr) {
+        await fs.unlink(resume.path).catch(() => {});
+        return res.status(400).json({ error: 'Unable to read the uploaded PDF. Please upload a valid text-based PDF.' });
+      }
+
+      const resumeText = (pdfData?.text || '').trim();
+      if (!resumeText) {
+        await fs.unlink(resume.path).catch(() => {});
+        return res.status(400).json({ error: 'The uploaded PDF does not contain readable text. Please upload a valid text-based PDF.' });
+      }
 
       const jobKeywords = extractKeywords(jobDescription);
       const resumeKeywords = extractKeywords(resumeText);
@@ -134,36 +185,19 @@ app.post('/analyze', (req, res) => {
         jobKeywords.allKeywords
       );
 
-      let aiAnalysis = null;
-      try {
-        const hfApiKey = process.env.HF_API_KEY;
-        if (!hfApiKey) throw new Error('Hugging Face API key not set in environment');
-        const prompt = `You are an expert recruiter analyzing a resume against a job description for an ATS tool.\nDo NOT explain, repeat, or reference these instructions.\nDo NOT show any calculation steps, skill counting, or meta-analysis in your output.\nIf the ATS match score is 60% or higher, highlight the candidate's strengths and suitability, providing 1-2 specific suggestions for resume improvement.\nIf below 60%, emphasize skill gaps and offer constructive feedback on how to improve the resume for the role.\nThe summary must be concise (50-100 words).\nInclude eligible or not for the post in the Overall Result.\n\nResume: ${resumeText}\nJob Description: ${jobDescription}\n\nOutput Format (no extra lines, no commentary, no calculations):\nPositives\nNegatives\nSuggestions\nOverall Result\n\nMake sure to provide a clear, structured response without any additional explanations or meta-analysis.`;
-        const hfResponse = await axios.post(
-          'https://api-inference.huggingface.co/v1/chat/completions',
-          {
-            model: 'meta-llama/Meta-Llama-3-8B-Instruct',
-            messages: [{ role: 'user', content: prompt }],
-            max_tokens: 256
-          },
-          {
-            headers: {
-              'Authorization': `Bearer ${hfApiKey}`,
-              'Content-Type': 'application/json'
-            },
-            timeout: 20000
-          }
-        );
-        aiAnalysis = hfResponse.data;
-      } catch (hfErr) {
-        aiAnalysis = { error: `Hugging Face API error: ${hfErr.response?.data?.error || hfErr.message}` };
-      }
+      await fs.unlink(resume.path).catch(e => console.error('File delete error:', e.message));
 
-      await fs.unlink(resume.path).catch(err => console.error('File delete error:', err.message));
-      res.json({ jobKeywords, resumeKeywords, matchPercentage, missingKeywords, aiAnalysis });
-
-    } catch (err) {
-      res.status(500).json({ error: `Server error: ${err.message}` });
+      // AI analysis is done by the frontend via /ai-analysis
+      res.json({
+        jobKeywords,
+        resumeKeywords,
+        matchPercentage,
+        missingKeywords,
+        resumeText: resumeText.slice(0, 6000),
+        jobDescriptionText: jobDescription.slice(0, 4000)
+      });
+    } catch (e) {
+      res.status(500).json({ error: `Server error: ${e.message}` });
     }
   });
 });
@@ -172,26 +206,31 @@ app.post('/ai-analysis', async (req, res) => {
   try {
     const { prompt } = req.body;
     if (!prompt) return res.status(400).json({ error: 'Prompt is required' });
-    const hfApiKey = process.env.HF_API_KEY;
-    if (!hfApiKey) return res.status(500).json({ error: 'Hugging Face API key not set in environment' });
+
+    const hfApiKey = process.env.HF_API_KEY || process.env.HF_TOKEN;
+    if (!hfApiKey) {
+      return res.status(500).json({ error: 'Hugging Face key not set in .env (HF_API_KEY)' });
+    }
+
     const response = await axios.post(
-      'https://api-inference.huggingface.co/v1/chat/completions',
+      HF_URL,
       {
-        model: 'meta-llama/Meta-Llama-3-8B-Instruct',
+        model: HF_MODEL,
         messages: [{ role: 'user', content: prompt }],
-        max_tokens: 256
+        max_tokens: 800
       },
       {
         headers: {
           'Authorization': `Bearer ${hfApiKey}`,
           'Content-Type': 'application/json'
         },
-        timeout: 20000
+        timeout: 60000
       }
     );
     res.json(response.data);
   } catch (err) {
-    res.status(500).json({ error: `Hugging Face API error: ${err.response?.data?.error || err.message}` });
+    console.error(formatHfError(err));
+    res.status(500).json({ error: formatHfError(err) });
   }
 });
 

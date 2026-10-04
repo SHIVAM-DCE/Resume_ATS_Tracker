@@ -1,74 +1,127 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ATS Resume Tracker</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ATS Resume Tracker | Check your resume against any job</title>
+<meta name="description" content="Upload your resume, paste a job description, and see your ATS match score, missing keywords and AI feedback in seconds.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.2/axios.min.js"></script>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <button class="help-btn" id="help-btn">Help</button>
-    <h1>ATS Resume Tracker</h1>
-    <p class="subtitle">Analyze your resume against job descriptions with a professional ATS tool.</p>
-    <div class="grid">
-      <div class="card">
-        <h2>Job Description</h2>
-        <textarea id="job-description" placeholder="Enter job description (max 5000 words)..." rows="5"></textarea>
-      </div>
-      <div class="card" id="job-keywords">
-        <h3>Extracted Keywords</h3>
-        <div id="job-keywords-content"></div>
-      </div>
-      <div class="card">
-        <h2>Upload Resume</h2>
-        <input type="file" id="resume-file" accept=".pdf">
-        <p class="file-note">Max file size: 5MB (text-based PDF only)</p>
-      </div>
-      <div class="card" id="resume-keywords">
-        <h3>Extracted Keywords</h3>
-        <div id="resume-keywords-content"></div>
-      </div>
-    </div>
-    <button type="button" id="analyze-btn">Analyze Resume 🚀</button>
-    <div id="error" class="error"></div>
-    <div id="spinner" class="spinner"></div>
-    <div id="results" class="card mt-8" style="display: none;">
-      <h2>Analysis Results</h2>
-      <div id="match-score"></div>
-      <div id="missing-keywords" class="mt-4"></div>
-      <div id="ai-analysis" class="mt-4"></div>
-      <div id="skills-requirements" class="mt-4">
-        <h3>Extracted Requirements</h3>
-        <div class="skills-grid" id="requirements-grid"></div>
-      </div>
-    </div>
-    <div class="overlay" id="overlay"></div>
-    <div class="help-section" id="help-section">
-      <button class="close-btn" id="close-help">×</button>
-      <h2>Help & Instructions</h2>
-      <p>Follow these steps to use the ATS Resume Tracker effectively:</p>
-      <ul>
-        <li><strong>Enter Job Description:</strong> Paste or type the job description in the left textarea (up to 5000 words).</li>
-        <li><strong>Upload Resume:</strong> Select a text-based PDF resume (max 5MB) using the file input on the right.</li>
-        <li><strong>Analyze:</strong> Click the "Analyze Resume" button to process your inputs.</li>
-        <li><strong>View Results:</strong> Check the results section for:
-          <ul>
-            <li>Match score (percentage of keyword overlap).</li>
-            <li>Extracted keywords from job description (below job description box).</li>
-            <li>Extracted keywords from resume (below resume upload box).</li>
-            <li>Missing keywords from the job description.</li>
-            <li>AI-powered analysis with suggestions.</li>
-            <li>Extracted requirements (Technical Skills, Soft Skills, Tools).</li>
-          </ul>
-        </li>
-        <li><strong>Tips:</strong> Ensure your resume is text-based (not scanned) and the job description is clear and detailed.</li>
-      </ul>
-    </div>
-    <div class="footer">Built with HTML, CSS, JS & Node.js | © 2025 ATS Resume Tracker</div>
+<div class="top"><div class="wrap"><span>Free resume checker for job seekers</span><span>No signup. Your resume is deleted after analysis.</span></div></div>
+<nav><div class="wrap">
+  <a class="logo" href="#home"><b>ATS</b>Resume Tracker</a>
+  <div class="links"><a href="#why">Why use it</a><a href="#about">About</a><a href="#analyze">Analyze</a><a href="#how">How it works</a><a href="#faq">FAQ</a><button id="help-btn" class="btn line" type="button">Help</button></div>
+</div></nav>
+
+<header class="hero" id="home"><div class="wrap">
+  <h1>Beat the resume filter</h1>
+  <p>Most companies scan resumes with software before a person reads them. Paste a job description, upload your resume, and see exactly which skills you are missing.</p>
+  <a class="btn" href="#analyze">Analyze my resume</a>
+</div></header>
+
+<section id="why"><div class="wrap">
+  <h2 class="title">Why <em>use it</em></h2>
+  <p class="lead">Built for students and freshers who apply to many roles and need quick, specific feedback.</p>
+  <div class="adv">
+    <div><div class="ic">%</div><h4>Match score</h4><p>One number showing how close your resume is to the job.</p></div>
+    <div><div class="ic">#</div><h4>Keywords</h4><p>Skills and tools found in both the job post and your resume.</p></div>
+    <div><div class="ic">!</div><h4>Gap finder</h4><p>A clear list of what the job asks for and you did not mention.</p></div>
+    <div><div class="ic">AI</div><h4>AI feedback</h4><p>Strengths, weaknesses and suggestions in plain language.</p></div>
+    <div><div class="ic">&#128274;</div><h4>Private</h4><p>Your PDF is removed from the server after analysis.</p></div>
   </div>
-  <script src="https://cdn.jsdelivr.net/npm/axios@1.7.2/dist/axios.min.js"></script>
-  <script type="module" src="./main.js"></script>
+</div></section>
+
+<section class="about" id="about"><div class="wrap">
+  <div>
+    <h2 class="title">About <em>the tool</em></h2>
+    <p>ATS stands for Applicant Tracking System. Recruiters use it to sort hundreds of resumes by keywords before reading any of them.</p>
+    <p>This tool does the same check for you. It reads your PDF, finds technical skills, soft skills and tools, and compares them with the job description.</p>
+    <ul><li>Works with text-based PDF resumes up to 5 MB</li><li>Covers IT roles: development, DevOps, cloud, data and security</li><li>Use the result to improve your resume, not to add skills you do not have</li></ul>
+    <a class="btn green" href="#analyze">Try it now</a>
+  </div>
+  <div class="bars"><h3 style="font-size:1rem">What the score looks at</h3>
+    <div class="bar"><span>Technical skills<em>Languages, cloud, databases</em></span><i><b style="width:100%"></b></i></div>
+    <div class="bar"><span>Tools<em>Git, Terraform, Azure DevOps</em></span><i><b style="width:80%"></b></i></div>
+    <div class="bar"><span>Soft skills<em>Leadership, teamwork</em></span><i><b style="width:55%"></b></i></div>
+    <p class="muted" style="margin:14px 0 0">Bars show how much each group is covered by the checker.</p></div>
+</div></section>
+
+<section class="tool" id="analyze"><div class="wrap">
+  <h2 class="title">Analyze <em>your resume</em></h2>
+  <p class="lead">Paste the full job description, upload your resume as a PDF, then press Analyze.</p>
+  <div class="grid two" style="margin-top:34px">
+    <div class="panel"><h3>1. Job description</h3><textarea id="job-description" placeholder="Paste the job description here"></textarea></div>
+    <div class="panel"><h3>2. Upload resume</h3><input type="file" id="resume-file" accept="application/pdf"><p class="muted">Max file size 5 MB. Text-based PDF only, scanned images will not work.</p>
+      <div class="center"><button id="analyze-btn" class="btn" type="button">Analyze resume</button><div id="spinner" class="spinner" style="display:none"></div></div>
+      <div id="error" class="error" style="display:none" role="alert"></div></div>
+  </div>
+
+  <div id="results" style="display:none">
+    <div class="grid four">
+      <div class="stat"><span>Job keywords</span><b id="stat-job">0</b></div>
+      <div class="stat"><span>Resume keywords</span><b id="stat-resume">0</b></div>
+      <div class="stat good"><span>Matched</span><b id="stat-matched">0</b></div>
+      <div class="stat bad"><span>Missing</span><b id="stat-missing">0</b></div>
+    </div>
+    <div class="grid score-row" style="margin-top:20px">
+      <div class="box"><div id="match-score"></div></div>
+      <div class="box"><div id="missing-keywords"></div></div>
+    </div>
+    <div class="grid two" style="margin-top:20px">
+      <div class="box" id="job-keywords"><h3>Job description keywords</h3><div id="job-keywords-content"></div></div>
+      <div class="box" id="resume-keywords"><h3>Resume keywords</h3><div id="resume-keywords-content"></div></div>
+    </div>
+    <div class="box" id="ai-analysis" style="margin-top:20px"></div>
+    <div class="center" style="margin-top:20px"><a class="btn green" href="results.html">Open full report</a></div>
+    <div class="box" style="margin-top:20px"><h3>Extracted requirements</h3><div id="requirements-grid" class="grid three"></div></div>
+  </div>
+</div></section>
+
+<section class="dark" id="how"><div class="wrap">
+  <h2 class="title">How <em style="color:var(--orange)">it works</em></h2>
+  <p class="lead" style="color:#aaa">Four steps, usually under a minute.</p>
+  <div class="steps">
+    <div><div class="n" style="color:#fff;border-color:var(--orange)">1</div><h4 style="color:#fff">Paste the job</h4><p>Copy the description from the job post.</p></div>
+    <div><div class="n" style="color:#fff;border-color:var(--orange)">2</div><h4 style="color:#fff">Upload resume</h4><p>Choose your text-based PDF.</p></div>
+    <div><div class="n" style="color:#fff;border-color:var(--orange)">3</div><h4 style="color:#fff">Read the result</h4><p>See your score and missing keywords.</p></div>
+    <div><div class="n" style="color:#fff;border-color:var(--orange)">4</div><h4 style="color:#fff">Improve and apply</h4><p>Add real skills you have, then re-check.</p></div>
+  </div>
+</div></section>
+
+<section class="cta"><div class="wrap">
+  <h2>Ready to check your next application?</h2>
+  <p style="margin:10px 0 22px">It takes one job description and one PDF.</p>
+  <a class="btn" href="#analyze">Start now</a>
+</div></section>
+
+<section class="faq" id="faq"><div class="wrap" style="max-width:800px">
+  <h2 class="title">Common <em>questions</em></h2>
+  <details><summary>What is a good match score?</summary><p>Above 60% is a solid start. Below 40% usually means key skills from the job are missing or named differently in your resume.</p></details>
+  <details><summary>Should I add every missing keyword?</summary><p>No. Add only skills you actually have. Interviewers ask about whatever is on your resume.</p></details>
+  <details><summary>Why does it say my PDF is unreadable?</summary><p>Scanned or image-only PDFs have no text to read. Export your resume as PDF from Word or Google Docs instead.</p></details>
+  <details><summary>Is my resume stored?</summary><p>The file is deleted from the server right after it is read.</p></details>
+</div></section>
+
+<footer><div class="wrap">
+  <div class="grid">
+    <div><div class="logo" style="color:#fff"><b style="background:#fff;color:var(--green-d)">ATS</b>Resume Tracker</div><p>A free tool that compares your resume with a job description and shows what to improve. Built by Shivam Kumar.</p></div>
+    <div><h4>Pages</h4><a href="#why">Why use it</a><a href="#about">About</a><a href="#how">How it works</a></div>
+    <div><h4>Tool</h4><a href="#analyze">Analyze resume</a><a href="#faq">FAQ</a></div>
+    <div><h4>Connect</h4><a href="https://www.linkedin.com/in/shivam-kumar-231b12261" target="_blank" rel="noopener noreferrer">LinkedIn</a><a href="https://github.com/SHIVAM-DCE" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+  </div>
+  <div class="copy">&copy; 2026 Shivam Kumar</div>
+</div></footer>
+
+<div id="overlay" class="overlay"></div>
+<aside id="help-section" class="help">
+  <button id="close-help" class="btn line" type="button">Close</button>
+  <h3 style="margin-top:18px">How to use</h3>
+  <ol><li>Paste the job description.</li><li>Upload your resume as a text-based PDF.</li><li>Click Analyze resume.</li><li>Add missing keywords only if you really have those skills.</li></ol>
+</aside>
+<script type="module" src="main.js"></script>
 </body>
 </html>
