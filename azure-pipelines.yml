@@ -22,8 +22,11 @@ steps:
       versionSpec: '22'
     displayName: 'Set up Node.js'
 
-  - script: npm install
+  - script: npm ci --omit=dev
     displayName: 'Install dependencies'
+
+  - script: npm audit --omit=dev --audit-level=high
+    displayName: 'Security audit (fails on high/critical)'
 
   - script: echo "Running tests..." && npm test || echo "No tests defined, skipping."
     displayName: 'Run tests'
@@ -46,23 +49,31 @@ steps:
   - script: |
       echo "Checking if branch $(featureBranch) exists on remote..."
       if git ls-remote --exit-code --heads origin $(featureBranch); then
-        echo "Branch exists — deleting..."
+        echo "Branch exists, deleting..."
         git push origin --delete refs/heads/$(featureBranch)
       else
-        echo "Branch not found on remote — skipping delete."
+        echo "Branch not found on remote, skipping delete."
       fi
     displayName: 'Delete feature branch'
     condition: and(succeeded(), ne(variables['Build.SourceBranchName'], 'main'))
 
   - script: |
-      echo "Archiving source as artifact on main branch..."
-      zip -r $(Build.ArtifactStagingDirectory)/$(artifactName).zip .
-    displayName: 'Archive source as artifact'
+      echo "Archiving only the files needed to run the app..."
+      zip -r $(Build.ArtifactStagingDirectory)/$(artifactName).zip \
+        backend frontend node_modules package.json package-lock.json \
+        -x "backend/uploads/*" "backend/.env" "backend/node_modules/*"
+    displayName: 'Archive app as artifact'
     condition: eq(variables['Build.SourceBranchName'], 'main')
 
   - script: |
       echo "Verifying artifact..."
       ls -la $(Build.ArtifactStagingDirectory)/$(artifactName).zip
+      if unzip -l $(Build.ArtifactStagingDirectory)/$(artifactName).zip | grep -E "\.git/|\.env$"; then
+        echo "ERROR: secrets found in artifact"
+        exit 1
+      else
+        echo "No .git or .env in artifact"
+      fi
     displayName: 'Verify artifact'
     condition: eq(variables['Build.SourceBranchName'], 'main')
 

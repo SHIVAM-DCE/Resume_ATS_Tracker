@@ -4,44 +4,43 @@ pr: none
 resources:
   pipelines:
     - pipeline: buildPipeline
-      source: SHIVAM-DCE.Resume_ATS_Tracker  # Replace with SHIVAM-DCE.Resume_ATS_Tracker if needed
+      source: SHIVAM-DCE.Resume_ATS_Tracker  # must match the CI pipeline NAME in Azure DevOps
       trigger:
         branches:
-          - main
+          include:
+            - main
 
 variables:
   resourceGroup: 'ats-resume-scanner-rg'
   appServiceName: 'ats-resume-tracker'
   azureSubscription: 'Resume-ATS-Tracker-sc'
   artifactName: 'ats-resume-tracker'
-  system.debug: true
 
 pool:
   vmImage: 'ubuntu-latest'
 
 steps:
   - script: |
-      echo "Pipeline ID: $(resources.pipeline.buildPipeline.pipelineId)"
+      echo "Pipeline ID: $(resources.pipeline.buildPipeline.pipelineID)"
       echo "Run ID: $(resources.pipeline.buildPipeline.runID)"
-      echo "Repository: $(Build.Repository.Name)"
       echo "Source Branch: $(Build.SourceBranch)"
-    displayName: 'Debug: Log pipeline details'
+    displayName: 'Log pipeline details'
 
   - task: DownloadPipelineArtifact@2
     displayName: 'Download build artifact'
     inputs:
       buildType: 'specific'
       project: '$(System.TeamProject)'
-      pipeline: '$(resources.pipeline.buildPipeline.pipelineId)'
+      pipeline: '$(resources.pipeline.buildPipeline.pipelineID)'
+      runVersion: 'specific'
       runId: '$(resources.pipeline.buildPipeline.runID)'
       artifact: '$(artifactName)'
       path: '$(Build.ArtifactStagingDirectory)'
-    continueOnError: true
 
   - script: |
       echo "Listing downloaded artifacts..."
       ls -la $(Build.ArtifactStagingDirectory)
-    displayName: 'Debug: List artifacts'
+    displayName: 'List artifacts'
 
   - task: AzureWebApp@1
     displayName: 'Deploy to Azure Web App'
